@@ -1,24 +1,5 @@
 # Grammar
 
-**TODO: Add description**
+Solution for Weekly Programming Challenge #2 by Jamis Buck.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `grammar` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:grammar, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `grammar` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:grammar]]
-    end
-    ```
-
+See: https://medium.com/@jamis/weekly-programming-challenge-2-33ef134b39cd#.6su7w6d6r
