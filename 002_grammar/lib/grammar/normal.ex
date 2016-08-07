@@ -54,36 +54,42 @@ defmodule Grammar.Normal do
     "wen"
   ]
 
-  def generate(r \\ rand(50))
+  def generate(r \\ rand(6))
 
   # Places
-  def generate(r) when r < 10 do
+  def generate(1) do
     "#{place_type} #{one_name}"
   end
 
   # Two-syllable name
-  def generate(r) when r < 20 do
+  def generate(2) do
     two_syllable_name
   end
 
   # Two-syllable name followed by another name
-  def generate(r) when r < 30 do
+  def generate(3) do
     "#{two_syllable_name} #{one_name}"
   end
 
   # Three-syllable name
-  def generate(r) when r < 40 do
+  def generate(4) do
     three_syllable_name
   end
 
   # Three-syllable name followed by another name
-  def generate(r) do #when r < 50 do
+  def generate(5) do 
     "#{three_syllable_name} #{one_name}"
   end
 
-  # Name with -in-
-  # Name with -en-
-  # Name with -i-
+  # Name with in, en or i
+  def generate(6) do
+    of_name
+  end
+
+  defp of_name(r \\ rand(3))
+  defp of_name(1), do: "#{one_name}-in-#{one_name}"
+  defp of_name(2), do: "#{one_name}-en-#{one_name}"
+  defp of_name(3), do: "#{one_name}-i-#{one_name}"
 
   defp place_type do
     @places |> Enum.shuffle |> hd
