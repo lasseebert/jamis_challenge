@@ -1,4 +1,12 @@
 defmodule Grammar.Normal do
+  @places [
+    "Minas",
+    "Nen",
+    "Ered",
+    "Dor",
+    "Amon"
+  ]
+
   @start_syllables [
     "And",
     "Ara",
@@ -9,6 +17,14 @@ defmodule Grammar.Normal do
     "Mith",
     "Mor",
     "Nim"
+  ]
+
+  @middle_syllables [
+    "gul",
+    "ar",
+    "hir",
+    "nor",
+    "lin"
   ]
 
   @end_syllables [
@@ -38,44 +54,59 @@ defmodule Grammar.Normal do
     "wen"
   ]
 
-  def generate do
-    type(rand(100))
-  end
+  def generate(r \\ rand(50))
 
   # Places
-  defp type(r) when r < 10 do
-    "#{place_type(rand(5))} #{one_name}"
+  def generate(r) when r < 10 do
+    "#{place_type} #{one_name}"
   end
 
   # Two-syllable name
-  defp type(r) do# when r < 20 do
+  def generate(r) when r < 20 do
     two_syllable_name
   end
 
   # Two-syllable name followed by another name
+  def generate(r) when r < 30 do
+    "#{two_syllable_name} #{one_name}"
+  end
+
   # Three-syllable name
+  def generate(r) when r < 40 do
+    three_syllable_name
+  end
+
   # Three-syllable name followed by another name
+  def generate(r) do #when r < 50 do
+    "#{three_syllable_name} #{one_name}"
+  end
+
   # Name with -in-
   # Name with -en-
   # Name with -i-
 
-  defp place_type(1), do: "Minas"
-  defp place_type(2), do: "Nen"
-  defp place_type(3), do: "Ered"
-  defp place_type(4), do: "Dor"
-  defp place_type(5), do: "Amon"
-
-  defp one_name do
-    # TODO
-    two_syllable_name
+  defp place_type do
+    @places |> Enum.shuffle |> hd
   end
+
+  defp one_name(r \\ rand(2))
+  defp one_name(1), do: two_syllable_name
+  defp one_name(2), do: three_syllable_name
 
   defp two_syllable_name do
     start_syllable <> end_syllable
   end
 
+  defp three_syllable_name do
+    start_syllable <> middle_syllable <> end_syllable
+  end
+
   defp start_syllable do
     @start_syllables |> Enum.shuffle |> hd
+  end
+
+  defp middle_syllable do
+    @middle_syllables |> Enum.shuffle |> hd
   end
 
   defp end_syllable do
