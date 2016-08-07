@@ -50,7 +50,6 @@ defmodule Grammar.Normal do
     "rod",
     "uin",
     "waith",
-    "waith",
     "wen"
   ]
 
