@@ -11,6 +11,8 @@ defmodule Maze do
     %{maze | walls: MapSet.put(maze.walls, point)}
   end
 
+  def wall?(%Maze{width: width}, {x, _}) when x < 0 or width <= x, do: true
+  def wall?(%Maze{height: height}, {_, y}) when y < 0 or height <= y, do: true
   def wall?(maze, point) do
     maze.walls
     |> MapSet.member?(point)
