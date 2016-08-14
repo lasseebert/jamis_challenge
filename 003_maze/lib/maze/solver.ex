@@ -6,7 +6,7 @@ defmodule Maze.Solver do
   def shortest_route(maze) do
     shortest_route(
       maze,
-      :queue.in({maze.start_point, 0, []}, :queue.new),
+      :queue.in({maze.start_point, []}, :queue.new),
       MapSet.new
     )
   end
@@ -15,7 +15,7 @@ defmodule Maze.Solver do
   defp shortest_route(_maze, {[], []}, _visited), do: :none
 
   defp shortest_route(maze, queue, visited) do
-    {{:value, {{x, y} = pos, dist, route}}, queue} = :queue.out(queue)
+    {{:value, {{x, y} = pos, route}}, queue} = :queue.out(queue)
 
     cond do
       Maze.wall?(maze, pos) ->
@@ -32,10 +32,10 @@ defmodule Maze.Solver do
 
       true ->
         # We're on a passage. Go in all possible directions from here
-        queue = :queue.in({{x + 1, y}, dist + 1, ["east" | route]}, queue)
-        queue = :queue.in({{x - 1, y}, dist + 1, ["west" | route]}, queue)
-        queue = :queue.in({{x, y + 1}, dist + 1, ["north" | route]}, queue)
-        queue = :queue.in({{x, y - 1}, dist + 1, ["south" | route]}, queue)
+        queue = :queue.in({{x + 1, y}, ["east" | route]}, queue)
+        queue = :queue.in({{x - 1, y}, ["west" | route]}, queue)
+        queue = :queue.in({{x, y + 1}, ["north" | route]}, queue)
+        queue = :queue.in({{x, y - 1}, ["south" | route]}, queue)
         visited = MapSet.put(visited, pos)
         shortest_route(maze, queue, visited)
     end
