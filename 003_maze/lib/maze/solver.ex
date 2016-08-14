@@ -7,17 +7,27 @@ defmodule Maze.Solver do
     )
   end
 
+  # Nothing left in queue and we didn't find the exit
+  defp shotest_route(_maze, {[], []}, _visited), do: :none
+
   defp shotest_route(maze, queue, visited) do
     {{:value, {{x, y} = pos, dist, route}}, queue} = :queue.out(queue)
 
     cond do
       Maze.wall?(maze, pos) ->
+        # We hit a wall
         shotest_route(maze, queue, visited)
+
       MapSet.member?(visited, pos) ->
+        # We hit a passage that was already visited in fewer steps
         shotest_route(maze, queue, visited)
+
       maze.exit_point == pos ->
+        # Yay! We found the exit
         Enum.reverse(route)
+
       true ->
+        # We're on a passage. Go in all possible directions from here
         queue = :queue.in({{x + 1, y}, dist + 1, ["East" | route]}, queue)
         queue = :queue.in({{x - 1, y}, dist + 1, ["West" | route]}, queue)
         queue = :queue.in({{x, y + 1}, dist + 1, ["North" | route]}, queue)

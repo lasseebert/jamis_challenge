@@ -57,6 +57,26 @@ defmodule Maze.SolverTest do
     assert solution == "2N"
   end
 
+  test "it return no solution when there are none" do
+    # Maze:
+    #
+    # ----
+    # |#X|
+    # |O#|
+    # ----
+    solution = %Maze{
+      width: 2,
+      height: 2,
+      start_point: {0, 0},
+      exit_point: {1, 1},
+    }
+    |> Maze.add_wall({0, 1})
+    |> Maze.add_wall({1, 0})
+    |> Solver.shortest_route
+
+    assert solution == :none
+  end
+
   test "it solves big empty maze" do
     solution = %Maze{
       width: 100,
