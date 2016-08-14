@@ -1,0 +1,2 @@
+defmodule Maze do
+end
