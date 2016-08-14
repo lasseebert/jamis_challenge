@@ -7,6 +7,8 @@ See: https://medium.com/@jamis/weekly-programming-challenge-3-932b16ddd957
 The solution uses a simple breadth-first algortihm, which is able to solve any
 maze.
 
+[See the code here](lib/maze/solver.ex)
+
 Usage:
 
 ```elixir
@@ -14,10 +16,10 @@ solution = "test/mazes/maze-hard-010.txt"
 |> Maze.Parser.from_file
 |> Maze.Solver.shortest_route
 
+# Output the solution in a nice way:
 solution
 |> Enum.join("\n")
 |> IO.puts
-
 IO.puts("#{length(solution)} steps")
 ```
 
