@@ -1,6 +1,6 @@
 defmodule Maze.Solver do
   def shortest_route(maze) do
-    shotest_route(
+    shortest_route(
       maze,
       :queue.in({maze.start_point, 0, []}, :queue.new),
       MapSet.new
@@ -8,19 +8,19 @@ defmodule Maze.Solver do
   end
 
   # Nothing left in queue and we didn't find the exit
-  defp shotest_route(_maze, {[], []}, _visited), do: :none
+  defp shortest_route(_maze, {[], []}, _visited), do: :none
 
-  defp shotest_route(maze, queue, visited) do
+  defp shortest_route(maze, queue, visited) do
     {{:value, {{x, y} = pos, dist, route}}, queue} = :queue.out(queue)
 
     cond do
       Maze.wall?(maze, pos) ->
         # We hit a wall
-        shotest_route(maze, queue, visited)
+        shortest_route(maze, queue, visited)
 
       MapSet.member?(visited, pos) ->
         # We hit a passage that was already visited in fewer steps
-        shotest_route(maze, queue, visited)
+        shortest_route(maze, queue, visited)
 
       maze.exit_point == pos ->
         # Yay! We found the exit
@@ -33,7 +33,7 @@ defmodule Maze.Solver do
         queue = :queue.in({{x, y + 1}, dist + 1, ["north" | route]}, queue)
         queue = :queue.in({{x, y - 1}, dist + 1, ["south" | route]}, queue)
         visited = MapSet.put(visited, pos)
-        shotest_route(maze, queue, visited)
+        shortest_route(maze, queue, visited)
     end
   end
 end
