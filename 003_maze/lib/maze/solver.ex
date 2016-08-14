@@ -28,10 +28,10 @@ defmodule Maze.Solver do
 
       true ->
         # We're on a passage. Go in all possible directions from here
-        queue = :queue.in({{x + 1, y}, dist + 1, ["East" | route]}, queue)
-        queue = :queue.in({{x - 1, y}, dist + 1, ["West" | route]}, queue)
-        queue = :queue.in({{x, y + 1}, dist + 1, ["North" | route]}, queue)
-        queue = :queue.in({{x, y - 1}, dist + 1, ["South" | route]}, queue)
+        queue = :queue.in({{x + 1, y}, dist + 1, ["east" | route]}, queue)
+        queue = :queue.in({{x - 1, y}, dist + 1, ["west" | route]}, queue)
+        queue = :queue.in({{x, y + 1}, dist + 1, ["north" | route]}, queue)
+        queue = :queue.in({{x, y - 1}, dist + 1, ["south" | route]}, queue)
         visited = MapSet.put(visited, pos)
         shotest_route(maze, queue, visited)
     end

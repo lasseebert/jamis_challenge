@@ -33,7 +33,7 @@ defmodule Maze.SolverTest do
     |> Solver.shortest_route
     |> short_notation
 
-    assert solution == "1E 1N"
+    assert solution == "1e 1n"
   end
 
   test "it finds shortest path of simple maze" do
@@ -54,7 +54,7 @@ defmodule Maze.SolverTest do
     |> Solver.shortest_route
     |> short_notation
 
-    assert solution == "2N"
+    assert solution == "2n"
   end
 
   test "it return no solution when there are none" do
@@ -87,7 +87,7 @@ defmodule Maze.SolverTest do
     |> Solver.shortest_route
     |> short_notation
 
-    assert solution == "99E 99N"
+    assert solution == "99e 99n"
   end
 
   test "it solves normal-001" do
@@ -96,7 +96,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "9N 6E 2S 2E 2S 4W 2N 2W 7S"
+    assert solution == "9n 6e 2s 2e 2s 4w 2n 2w 7s"
   end
 
   test "it solves normal-002" do
@@ -105,7 +105,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "7E 4N 2W 2S 4W 2N 2E"
+    assert solution == "7e 4n 2w 2s 4w 2n 2e"
   end
 
   test "it solves normal-003" do
@@ -114,7 +114,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "5S 2W 2S 2W 2S 2W 6N 2W 7S"
+    assert solution == "5s 2w 2s 2w 2s 2w 6n 2w 7s"
   end
 
   test "it solves normal-010" do
@@ -123,7 +123,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "1W 8N 2W 4S 8W 2S 4W 2N 2E 2N 2W 2N 8W 2S 4W 2N 2W 2S 2W 2N 2W 2S 6W 2S 4E 2S 2W 2S 2W 2S 4E 4S 2E 4S 4W 2S 2W 4S 6E 4S 2W 2S 2W 4N 2W 6S 2E 6S 2W 4N 1W"
+    assert solution == "1w 8n 2w 4s 8w 2s 4w 2n 2e 2n 2w 2n 8w 2s 4w 2n 2w 2s 2w 2n 2w 2s 6w 2s 4e 2s 2w 2s 2w 2s 4e 4s 2e 4s 4w 2s 2w 4s 6e 4s 2w 2s 2w 4n 2w 6s 2e 6s 2w 4n 1w"
   end
 
   test "it solves hard-001" do
@@ -132,7 +132,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "5S 2W 4N 6W 2S 4E 4S 4W 2S 6E 2N 2E 3S"
+    assert solution == "5s 2w 4n 6w 2s 4e 4s 4w 2s 6e 2n 2e 3s"
   end
 
   test "it solves hard-005" do
@@ -141,7 +141,7 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "2W 2N 4E 2S 6E 2S 2E 4S 6W 2S 4E 2S 2W 2S 2E 2S 2W 2S 10E 2N 2W"
+    assert solution == "2w 2n 4e 2s 6e 2s 2e 4s 6w 2s 4e 2s 2w 2s 2e 2s 2w 2s 10e 2n 2w"
   end
 
   test "it solves hard-010" do
@@ -150,6 +150,6 @@ defmodule Maze.SolverTest do
                 |> Solver.shortest_route
                 |> short_notation
 
-    assert solution == "1S 2E 2S 4E 2N 4E 2S 2W 2S 2W 2S 2E 6S 2W 2S 2W 2S 6E 2S 2E 4S 2W 4S 2W 2S 6E 4S 2E 2S 4E 2S 2E 2S 6E 2N 2W"
+    assert solution == "1s 2e 2s 4e 2n 4e 2s 2w 2s 2w 2s 2e 6s 2w 2s 2w 2s 6e 2s 2e 4s 2w 4s 2w 2s 6e 4s 2e 2s 4e 2s 2e 2s 6e 2n 2w"
   end
 end
