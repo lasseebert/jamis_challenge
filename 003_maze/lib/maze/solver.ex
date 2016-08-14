@@ -1,4 +1,8 @@
 defmodule Maze.Solver do
+  @doc """
+  Solves the given %Maze{} using a breadth-first algorithm
+  Returns the shortest path as a list of directions
+  """
   def shortest_route(maze) do
     shortest_route(
       maze,
