@@ -57,18 +57,18 @@ defmodule Maze.SolverTest do
     assert solution == "2N"
   end
 
-  #test "it solves big empty maze" do
-  #  solution = %Maze{
-  #    width: 100,
-  #    height: 100,
-  #    start_point: {0, 0},
-  #    exit_point: {99, 99},
-  #  }
-  #  |> Solver.shortest_route
-  #  |> short_notation
+  test "it solves big empty maze" do
+    solution = %Maze{
+      width: 100,
+      height: 100,
+      start_point: {0, 0},
+      exit_point: {99, 99},
+    }
+    |> Solver.shortest_route
+    |> short_notation
 
-  #  assert solution == :foo
-  #end
+    assert solution == "99E 99N"
+  end
 
   test "it solves normal-001" do
     solution = "test/mazes/maze-normal-001.txt"
@@ -124,12 +124,12 @@ defmodule Maze.SolverTest do
     assert solution == "2W 2N 4E 2S 6E 2S 2E 4S 6W 2S 4E 2S 2W 2S 2E 2S 2W 2S 10E 2N 2W"
   end
 
-  #test "it solves hard-010" do
-  #  solution = "test/mazes/maze-hard-010.txt"
-  #              |> Parser.from_file
-  #              |> Solver.shortest_route
-  #              |> short_notation
+  test "it solves hard-010" do
+    solution = "test/mazes/maze-hard-010.txt"
+                |> Parser.from_file
+                |> Solver.shortest_route
+                |> short_notation
 
-  #  assert solution == "2W 2N 4E 2S 6E 2S 2E 4S 6W 2S 4E 2S 2W 2S 2E 2S 2W 2S 10E 2N 2W"
-  #end
+    assert solution == "1S 2E 2S 4E 2N 4E 2S 2W 2S 2W 2S 2E 6S 2W 2S 2W 2S 6E 2S 2E 4S 2W 4S 2W 2S 6E 4S 2E 2S 4E 2S 2E 2S 6E 2N 2W"
+  end
 end
