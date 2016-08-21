@@ -1,0 +1,2 @@
+defmodule Image do
+end
