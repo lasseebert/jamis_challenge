@@ -21,6 +21,10 @@ defmodule Image.Raw do
     % __MODULE__{width: width, height: height, pixels: pixels}
   end
 
+  def draw_pixel(raw, position, color) do
+    %{raw | pixels: Map.update!(raw.pixels, position, fn _ -> color end)}
+  end
+
   def pixel_at(raw, position) do
     Map.fetch!(raw.pixels, position)
   end
