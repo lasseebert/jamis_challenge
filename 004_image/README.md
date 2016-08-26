@@ -39,4 +39,4 @@ File.write!("example.ppm", data)
 
 Will yield:
 
-![Example image](/example.png)
+![Example image](https://raw.githubusercontent.com/lasseebert/jamis_challenge/master/004_image/example.png)
