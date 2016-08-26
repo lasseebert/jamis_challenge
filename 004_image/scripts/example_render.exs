@@ -28,9 +28,9 @@ defmodule ExampleRender do
 
   @doc "Draws a nice shape in four colors"
   def example_2 do
-    x_max = 1800
-    y_max = 1200
-    steps = 100
+    x_max = 300
+    y_max = 200
+    steps = 50
 
     raw = Raw.new(x_max + 1, y_max + 1)
 
