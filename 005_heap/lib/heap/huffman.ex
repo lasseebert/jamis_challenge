@@ -40,7 +40,7 @@ defmodule Heap.Huffman do
   def encode(text) do
     encoding = create_encoding(text)
     encoded = encode(encoding, text)
-    padding_size = 8 - rem(bit_size(encoded) + 3, 8)
+    padding_size = rem(8 - rem(bit_size(encoded) + 3, 8), 8)
     padding = Enum.reduce(1..padding_size, <<>>, fn _, bits -> << 0::1, bits::bitstring >> end)
 
     string_encoding = encoding |> stringify_encoding
