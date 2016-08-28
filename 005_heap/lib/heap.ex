@@ -11,15 +11,15 @@ defmodule Heap do
   alias Heap.Tree
 
   defstruct(
-    compare: &Kernel.</2,
+    compare: nil,
     root: Tree.new
   )
 
   def new do
-    %__MODULE__{}
+    new(&(&1))
   end
-  def new(compare) do
-    %__MODULE__{compare: compare}
+  def new(compare_by) do
+    %__MODULE__{compare: &(compare_by.(&1) < compare_by.(&2))}
   end
 
   @doc """

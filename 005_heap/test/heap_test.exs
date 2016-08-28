@@ -44,7 +44,7 @@ defmodule HeapTest do
 
   test "using another comparison function" do
     heap =
-      Heap.new(&(String.length(&1) < String.length(&2)))
+      Heap.new(&String.length/1)
       |> Heap.insert("apple")
       |> Heap.insert("banana")
       |> Heap.insert("kiwi")
