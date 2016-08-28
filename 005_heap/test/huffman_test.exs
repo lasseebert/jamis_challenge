@@ -28,4 +28,9 @@ defmodule Heap.HuffmanTest do
 
     assert text |> Huffman.encode |> Huffman.decode == text
   end
+
+  test "encoding an elixir file" do
+    text = File.read!("lib/heap/huffman.ex")
+    assert text |> Huffman.encode |> Huffman.decode == text
+  end
 end

@@ -41,7 +41,12 @@ defmodule Heap.Huffman do
     encoding = create_encoding(text)
     encoded = encode(encoding, text)
     padding_size = rem(8 - rem(bit_size(encoded) + 3, 8), 8)
-    padding = Enum.reduce(1..padding_size, <<>>, fn _, bits -> << 0::1, bits::bitstring >> end)
+    padding =
+      if padding_size > 0 do
+        Enum.reduce(1..padding_size, <<>>, fn _, bits -> << 0::1, bits::bitstring >> end)
+      else
+        <<>>
+      end
 
     string_encoding = encoding |> stringify_encoding
 
@@ -119,23 +124,30 @@ defmodule Heap.Huffman do
   end
 
   defp stringify_encoding({left, right}) do
-    "{#{stringify_encoding(left)}#{stringify_encoding(right)}}"
+    <<
+      0,
+      stringify_encoding(left)::binary,
+      stringify_encoding(right)::binary,
+      1
+    >>
   end
-  defp stringify_encoding(char) do
-    char
+  defp stringify_encoding(<<char>>) do
+    <<char>>
   end
 
   defp parse_string_encoding(string) do
     {encoding, ""} = do_parse_string_encoding(string)
     encoding
   end
-  defp do_parse_string_encoding(<<"{", rest::binary>>) do
-    {left, rest} = do_parse_string_encoding(rest)
-    {right, rest} = do_parse_string_encoding(rest)
-    <<"}", rest::binary>> = rest
-    {{left, right}, rest}
-  end
-  defp do_parse_string_encoding(<<char::binary-size(1), rest::binary>>) do
-    {char, rest}
+  defp do_parse_string_encoding(string) do
+    case String.next_grapheme(string) do
+      {<<0>>, rest} ->
+        {left, rest} = do_parse_string_encoding(rest)
+        {right, rest} = do_parse_string_encoding(rest)
+        <<1, rest::binary>> = rest
+        {{left, right}, rest}
+      {char, rest} ->
+        {char, rest}
+    end
   end
 end
