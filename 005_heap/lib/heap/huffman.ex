@@ -127,8 +127,7 @@ defmodule Heap.Huffman do
     <<
       0,
       stringify_encoding(left)::binary,
-      stringify_encoding(right)::binary,
-      1
+      stringify_encoding(right)::binary
     >>
   end
   defp stringify_encoding(<<char>>) do
@@ -144,7 +143,6 @@ defmodule Heap.Huffman do
       {<<0>>, rest} ->
         {left, rest} = do_parse_string_encoding(rest)
         {right, rest} = do_parse_string_encoding(rest)
-        <<1, rest::binary>> = rest
         {{left, right}, rest}
       {char, rest} ->
         {char, rest}
