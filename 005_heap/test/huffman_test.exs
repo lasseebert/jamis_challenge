@@ -13,8 +13,6 @@ defmodule Heap.HuffmanTest do
     assert byte_size(encoded) < byte_size(text)
   end
 
-  test "unicode chars"
-
   test "including the generator" do
     text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam interdum at libero sit amet auctor. Proin sit amet leo urna. Curabitur vel risus nisl. Mauris at lacus nec neque imperdiet vestibulum et vel tortor. Quisque facilisis ac lacus ut tincidunt. Phasellus suscipit turpis eget placerat commodo. Fusce et eleifend ipsum."
 
@@ -23,5 +21,11 @@ defmodule Heap.HuffmanTest do
 
     assert text == decoded
     assert byte_size(encoded) < byte_size(text)
+  end
+
+  test "unicode chars" do
+    text = "æøåÆØÅé"
+
+    assert text |> Huffman.encode |> Huffman.decode == text
   end
 end
