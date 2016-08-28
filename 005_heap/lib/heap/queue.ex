@@ -14,9 +14,16 @@ defmodule Heap.Queue do
     Heap.insert(queue, {priority, item})
   end
 
-  def dequeue(queue) do
-    {{_priority, item}, queue} = Heap.remove(queue)
-    {item, queue}
+  def dequeue(queue, opts \\ []) do
+    return_priority = Keyword.get(opts, :return_priority, false)
+
+    {{priority, item}, queue} = Heap.remove(queue)
+
+    if return_priority do
+      {priority, item, queue}
+    else
+      {item, queue}
+    end
   end
 
   def size(queue), do: Heap.size(queue)
