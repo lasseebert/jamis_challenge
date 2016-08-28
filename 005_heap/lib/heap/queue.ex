@@ -6,6 +6,9 @@ defmodule Heap.Queue do
   def new do
     Heap.new(fn {priority, _item} -> priority end)
   end
+  def new(compare_by) do
+    Heap.new(fn {priority, _item} -> compare_by.(priority) end)
+  end
 
   def enqueue(queue, priority, item) do
     Heap.insert(queue, {priority, item})
