@@ -18,6 +18,9 @@ defmodule Heap do
   def new do
     %__MODULE__{}
   end
+  def new(compare) do
+    %__MODULE__{compare: compare}
+  end
 
   @doc """
   Returns the top value

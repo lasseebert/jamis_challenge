@@ -41,4 +41,21 @@ defmodule HeapTest do
 
     assert heap == Heap.new
   end
+
+  test "using another comparison function" do
+    heap =
+      Heap.new(&(String.length(&1) < String.length(&2)))
+      |> Heap.insert("apple")
+      |> Heap.insert("banana")
+      |> Heap.insert("kiwi")
+
+    {v1, heap} = Heap.remove(heap)
+    {v2, heap} = Heap.remove(heap)
+    {v3, heap} = Heap.remove(heap)
+
+    assert v1 == "kiwi"
+    assert v2 == "apple"
+    assert v3 == "banana"
+    assert Heap.size(heap) == 0
+  end
 end
