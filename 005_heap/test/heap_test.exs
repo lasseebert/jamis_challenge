@@ -36,6 +36,7 @@ defmodule HeapTest do
             |> Enum.reduce(heap, fn expected, heap ->
               {value, heap} = Heap.remove(heap)
               assert value == expected
+              heap
             end)
 
     assert heap == Heap.new

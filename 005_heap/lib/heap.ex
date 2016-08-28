@@ -53,8 +53,7 @@ defmodule Heap do
   Returns {value, updated_heap}
   """
   def remove(heap) do
-    with {:ok, value, tree} <- Tree.remove(heap.root, heap.compare) do
-      {:ok, value, %{heap | root: tree}}
-    end
+    {value, tree} = Tree.remove(heap.root, heap.compare)
+    {value, %{heap | root: tree}}
   end
 end
