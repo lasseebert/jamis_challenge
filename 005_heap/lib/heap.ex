@@ -2,7 +2,7 @@ defmodule Heap do
   @moduledoc """
   A heap structure implemented with a binary tree as data structure.
   The heap operations and structure is taken from this paper:
-  [A Functional Approach to Standard Binary Heaps<Paste>](http://arxiv.org/abs/1312.4666)
+  [A Functional Approach to Standard Binary Heaps](http://arxiv.org/abs/1312.4666)
 
   Each node in the tree keeps track of the size and height of the subtree it
   represents. This allows for O(log n) insert and remove operations.
