@@ -58,6 +58,7 @@ iex(7)> encoded |> String.length
 2351
 
 # Just get the encoding
+# This is a tree in which left means 0 and right means 1.
 iex(8)> Huffman.create_encoding(text)
 {{{{{{"h", {"l", {{{"]", "["}, {"M", "8"}}, "="}}}, "a"},
     {",", {{{{"@", "2"}, {{{"C", "D"}, "w"}, "0"}}, "."}, "p"}}},
