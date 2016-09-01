@@ -34,6 +34,8 @@ I used the priority queue to implement a huffman coder. It can
 * Pad the result to a whole number of bytes
 * Decode
 
+See [Heap.Huffman](lib/heap/huffman.ex)
+
 Example with including the encoding within the encoded text:
 
 ```elixir
