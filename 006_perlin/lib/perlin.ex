@@ -23,9 +23,9 @@ defmodule Perlin do
   @doc """
   Generate Perlin noise using several octaves
   """
-  def generate({_, _} = dimensions, octaves \\ 6, persistance \\ 1) do
+  def generate({_, _} = dimensions, min_octave \\ 2, max_octave \\ 4, persistance \\ 0.9) do
     {image, _amp, max} =
-      for octave <- (0..octaves-1) do
+      for octave <- (min_octave..max_octave) do
         grid_size = :math.pow(2, octave) |> trunc
         generate(dimensions, {grid_size, grid_size})
       end
