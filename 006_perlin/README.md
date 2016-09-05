@@ -1,24 +1,5 @@
 # Perlin
 
-**TODO: Add description**
+Solution for Weekly Programming Challenge #6 by Jamis Buck.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `perlin` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:perlin, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `perlin` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:perlin]]
-    end
-    ```
-
+See: https://medium.com/@jamis/weekly-programming-challenge-6-83fa37e9e737
