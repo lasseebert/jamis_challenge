@@ -27,6 +27,8 @@ defmodule Perlin.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:image, path: "../004_image"}
+    ]
   end
 end
