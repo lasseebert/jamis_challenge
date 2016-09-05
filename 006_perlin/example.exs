@@ -1,10 +1,13 @@
 alias Image.Raw
 alias Image.PPMRenderer
 
-raw = Raw.new(256, 256)
+width = 512
+height = 512
+
+raw = Raw.new(width, height)
 
 image_data =
-  Perlin.generate({256, 256}, {10, 10})
+  Perlin.generate({width, height})
   |> Enum.reduce(raw, fn
     {{x, y}, value}, raw ->
       value = (value + 1) / 2 * 255 |> trunc

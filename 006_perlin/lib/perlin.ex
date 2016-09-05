@@ -20,6 +20,27 @@ defmodule Perlin do
     |> Enum.into(%{})
   end
 
+  @doc """
+  Generate Perlin noise using several octaves
+  """
+  def generate({_, _} = dimensions, octaves \\ 6, persistance \\ 1) do
+    {image, _amp, max} =
+      for octave <- (0..octaves-1) do
+        grid_size = :math.pow(2, octave) |> trunc
+        generate(dimensions, {grid_size, grid_size})
+      end
+      |> Enum.reduce({%{}, 1, 0}, fn image, {total_image, amplitude, max} ->
+        total_image = Map.merge(total_image, image, fn _key, v1, v2 -> v1 + v2 * amplitude end)
+        max = max + amplitude
+        amplitude = amplitude * persistance
+        {total_image, amplitude, max}
+      end)
+
+    image
+    |> Enum.map(fn {pos, value} -> {pos, value / max} end)
+    |> Enum.into(%{})
+  end
+
   defp perlin(grid, x, y) do
     # Grid position
     grid_x0 = trunc(x)

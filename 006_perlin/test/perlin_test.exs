@@ -8,4 +8,12 @@ defmodule PerlinTest do
     assert Map.get(pixels, {2, 4}) <= 1
     assert Map.get(pixels, {2, 4}) >= -1
   end
+
+  test "creating with octaves" do
+    pixels = Perlin.generate({5, 5})
+
+    assert %{} = pixels
+    assert Map.get(pixels, {2, 4}) <= 1
+    assert Map.get(pixels, {2, 4}) >= -1
+  end
 end
