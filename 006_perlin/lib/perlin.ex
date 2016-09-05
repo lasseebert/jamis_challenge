@@ -54,6 +54,10 @@ defmodule Perlin do
   end
 
   defp interpolate(a, b, w) do
-    (1 - w) * a + w * b
+    a + smoothen(w) * (b - a)
+  end
+
+  defp smoothen(x) do
+    (x * x) * (3 - 2 * x)
   end
 end
