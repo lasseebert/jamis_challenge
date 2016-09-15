@@ -3,6 +3,8 @@ defmodule Bex.Root do
   Root in the tree. Has between 2 and arity children.
   """
 
+  alias Bex.InternalNode
+
   defstruct(
     arity: nil,
     keys: [],
@@ -31,6 +33,7 @@ defmodule Bex.Root do
           keys: [new_key | tree.keys] |> Enum.sort,
           size: tree.size + 1
         }
+        |> normalize
       new_child ->
         %{tree | children: [left_children, new_child, right_children] |> List.flatten}
     end
@@ -51,6 +54,19 @@ defmodule Bex.Root do
       nil -> tree.size - 1
       n -> n
     end
+  end
+
+  defp normalize(%{arity: arity, size: size} = tree) when arity + 1 == size do
+    root_key_index = div(arity, 2)
+    {left_keys, [root_key | right_keys]} = Enum.split(tree.keys, root_key_index)
+    {left_children, right_children} = Enum.split(tree.children, root_key_index + 1)
+
+    left = InternalNode.new(arity, left_keys, left_children)
+    right = InternalNode.new(arity, right_keys, right_children)
+    new(arity, root_key, left, right)
+  end
+  defp normalize(tree) do
+    tree
   end
 end
 
