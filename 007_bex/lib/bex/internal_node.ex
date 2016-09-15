@@ -20,23 +20,23 @@ defmodule Bex.InternalNode do
     }
   end
 
-  #def insert(tree, key, value) do
-  #  child_index = child_index(tree, key)
-  #  {left_children, [child | right_children]} = Enum.split(tree.children, child_index)
+  def insert(tree, key, value) do
+    child_index = child_index(tree, key)
+    {left_children, [child | right_children]} = Enum.split(tree.children, child_index)
 
-  #  case Bex.insert(child, key, value) do
-  #    {left, right, new_key} ->
-  #      %{
-  #        tree |
-  #        children: [left_children, left, right, right_children] |> List.flatten,
-  #        keys: [new_key | tree.keys] |> Enum.sort,
-  #        size: tree.size + 1
-  #      }
-  #      |> normalize
-  #    new_child ->
-  #      %{tree | children: [left_children, new_child, right_children] |> List.flatten}
-  #  end
-  #end
+    case Bex.insert(child, key, value) do
+      {left, right, new_key} ->
+        %{
+          tree |
+          children: [left_children, left, right, right_children] |> List.flatten,
+          keys: [new_key | tree.keys] |> Enum.sort,
+          size: tree.size + 1
+        }
+        |> normalize
+      new_child ->
+        %{tree | children: [left_children, new_child, right_children] |> List.flatten}
+    end
+  end
 
   def find(tree, key) do
     tree.children
@@ -64,9 +64,9 @@ defmodule Bex.InternalNode do
   #  right = InternalNode.new(arity, right_keys, right_children)
   #  new(arity, root_key, left, right)
   #end
-  #defp normalize(tree) do
-  #  tree
-  #end
+  defp normalize(tree) do
+    tree
+  end
 end
 
 defimpl Bex.Tree, for: Bex.InternalNode do
