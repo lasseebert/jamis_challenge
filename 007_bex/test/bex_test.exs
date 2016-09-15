@@ -86,4 +86,16 @@ defmodule BexTest do
     assert Bex.find(tree, 9) == {:error, :not_found}
     assert Bex.height(tree) == 3
   end
+
+  test "adding a bunch of values" do
+    tree = Bex.new(10)
+    values = 0..1000 |> Enum.shuffle
+    tree = Enum.reduce(values, tree, fn value, tree -> Bex.insert(tree, value, "#{value}") end)
+
+    assert Bex.find(tree, 1) == {:ok, "1"}
+    assert Bex.find(tree, 7) == {:ok, "7"}
+    assert Bex.find(tree, 722) == {:ok, "722"}
+    assert Bex.find(tree, 1001) == {:error, :not_found}
+    assert Bex.height(tree) < 5
+  end
 end
