@@ -7,7 +7,7 @@ defmodule Bex do
   alias Bex.SingleRoot
 
   def new(arity \\ 3) do
-    SingleRoot.new(3)
+    SingleRoot.new(arity)
   end
 
   def insert(tree, key, value) do

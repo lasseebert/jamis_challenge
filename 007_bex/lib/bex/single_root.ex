@@ -11,12 +11,27 @@ defmodule Bex.SingleRoot do
     size: 0
   )
 
+  alias Bex.Leaf
+  alias Bex.Root
+
   def new(arity) do
     %__MODULE__{arity: arity}
   end
 
   def insert(%{size: size, arity: arity} = tree, key, value) when size < arity - 1 do
     %{tree | size: size + 1, data: Map.put(tree.data, key, value)}
+  end
+
+  def insert(%{size: size, arity: arity} = tree, key, value) when size == arity - 1 do
+    data = Map.put(tree.data, key, value)
+    data_list = data |> Enum.to_list |> Enum.sort
+    left_size = div(tree.size, 2)
+    {left_data, right_data} = data_list |> Enum.split(left_size)
+
+    left_leaf = Leaf.new(arity, left_data)
+    right_leaf = Leaf.new(arity, right_data)
+    {root_key, _value} = right_data |> hd
+    Root.new(arity, root_key, left_leaf, right_leaf)
   end
 
   def find(tree, key) do
