@@ -69,4 +69,21 @@ defmodule BexTest do
     assert Bex.find(tree, 9) == {:error, :not_found}
     assert Bex.height(tree) == 3
   end
+
+  test "splitting internal nodes" do
+    tree =
+      Bex.new(3)
+      |> Bex.insert(1, "one")
+      |> Bex.insert(2, "two")
+      |> Bex.insert(3, "three")
+      |> Bex.insert(4, "four")
+      |> Bex.insert(5, "five")
+      |> Bex.insert(6, "six")
+      |> Bex.insert(7, "seven")
+
+    assert Bex.find(tree, 1) == {:ok, "one"}
+    assert Bex.find(tree, 7) == {:ok, "seven"}
+    assert Bex.find(tree, 9) == {:error, :not_found}
+    assert Bex.height(tree) == 3
+  end
 end

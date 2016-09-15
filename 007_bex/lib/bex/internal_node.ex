@@ -55,15 +55,15 @@ defmodule Bex.InternalNode do
     end
   end
 
-  #defp normalize(%{arity: arity, size: size} = tree) when arity + 1 == size do
-  #  root_key_index = div(arity, 2)
-  #  {left_keys, [root_key | right_keys]} = Enum.split(tree.keys, root_key_index)
-  #  {left_children, right_children} = Enum.split(tree.children, root_key_index + 1)
+  defp normalize(%{arity: arity, size: size} = tree) when arity + 1 == size do
+    root_key_index = div(arity, 2)
+    {left_keys, [root_key | right_keys]} = Enum.split(tree.keys, root_key_index)
+    {left_children, right_children} = Enum.split(tree.children, root_key_index + 1)
 
-  #  left = InternalNode.new(arity, left_keys, left_children)
-  #  right = InternalNode.new(arity, right_keys, right_children)
-  #  new(arity, root_key, left, right)
-  #end
+    left = new(arity, left_keys, left_children)
+    right = new(arity, right_keys, right_children)
+    {left, right, root_key}
+  end
   defp normalize(tree) do
     tree
   end
