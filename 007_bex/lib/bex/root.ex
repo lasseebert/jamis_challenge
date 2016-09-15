@@ -5,36 +5,57 @@ defmodule Bex.Root do
 
   defstruct(
     arity: nil,
-    data: %{},
-    last_child: nil,
+    keys: [],
+    children: [],
     size: 0
   )
 
   def new(arity, key, left, right) do
     %__MODULE__{
       arity: arity,
-      data: %{key => left},
-      last_child: right,
+      keys: [key],
+      children: [left, right],
       size: 2
     }
   end
 
-  def find(tree, key) do
-    data_list = tree.data |> Enum.to_list |> Enum.sort
+  def insert(tree, key, value) do
+    child_index = child_index(tree, key)
+    {left_children, [child | right_children]} = Enum.split(tree.children, child_index)
 
-    case data_list |> Enum.find(fn {k, _child} -> k > key end) do
-      nil -> Bex.find(tree.last_child, key)
-      {_k, child} -> Bex.find(child, key)
+    case Bex.insert(child, key, value) do
+      {left, right, new_key} ->
+        %{
+          tree |
+          children: [left_children, left, right, right_children] |> List.flatten,
+          keys: [new_key | tree.keys] |> Enum.sort,
+          size: tree.size + 1
+        }
+      new_child ->
+        %{tree | children: [left_children, new_child, right_children] |> List.flatten}
     end
   end
 
+  def find(tree, key) do
+    tree.children
+    |> Enum.at(child_index(tree, key))
+    |> Bex.find(key)
+  end
+
   def height(tree) do
-    1 + Bex.height(tree.last_child)
+    1 + Bex.height(tree.children |> hd)
+  end
+
+  defp child_index(tree, key) do
+    case tree.keys |> Enum.find_index(fn k -> k > key end) do
+      nil -> tree.size - 1
+      n -> n
+    end
   end
 end
 
 defimpl Bex.Tree, for: Bex.Root do
-  def insert(_tree, _key, _value), do: :not_implemented
+  def insert(tree, key, value), do: Bex.Root.insert(tree, key, value)
   def find(tree, key), do: Bex.Root.find(tree, key)
   def height(tree), do: Bex.Root.height(tree)
 end

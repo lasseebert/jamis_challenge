@@ -18,6 +18,22 @@ defmodule Bex.Leaf do
     }
   end
 
+  def insert(%{size: size, arity: arity} = tree, key, value) when size < arity - 1 do
+    %{tree | size: size + 1, data: Map.put(tree.data, key, value)}
+  end
+
+  def insert(%{size: size, arity: arity} = tree, key, value) when size == arity - 1 do
+    data = Map.put(tree.data, key, value)
+    data_list = data |> Enum.to_list |> Enum.sort
+    left_size = div(tree.size, 2)
+    {left_data, right_data} = data_list |> Enum.split(left_size)
+
+    left_leaf = new(arity, left_data)
+    right_leaf = new(arity, right_data)
+    {root_key, _value} = right_data |> hd
+    {left_leaf, right_leaf, root_key}
+  end
+
   def find(tree, key) do
     case Map.has_key?(tree.data, key) do
       false -> {:error, :not_found}
@@ -29,7 +45,7 @@ defmodule Bex.Leaf do
 end
 
 defimpl Bex.Tree, for: Bex.Leaf do
-  def insert(_tree, _key, _value), do: :not_implemented
+  def insert(tree, key, value), do: Bex.Leaf.insert(tree, key, value)
   def find(tree, key), do: Bex.Leaf.find(tree, key)
   def height(tree), do: Bex.Leaf.height(tree)
 end
