@@ -98,4 +98,15 @@ defmodule BexTest do
     assert Bex.find(tree, 1001) == {:error, :not_found}
     assert Bex.height(tree) < 5
   end
+
+  test "deleting from a SingleRoot" do
+    tree =
+      Bex.new(3)
+      |> Bex.insert(1, "one")
+      |> Bex.delete(1)
+
+    assert Bex.find(tree, 1) == {:error, :not_found}
+    assert %Bex.SingleRoot{} = tree
+    assert tree.size == 0
+  end
 end

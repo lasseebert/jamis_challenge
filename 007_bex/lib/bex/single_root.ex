@@ -34,6 +34,13 @@ defmodule Bex.SingleRoot do
     Root.new(arity, root_key, left_leaf, right_leaf)
   end
 
+  def delete(tree, key) do
+    case Map.has_key?(tree.data, key) do
+      true -> %{tree | size: tree.size - 1, data: Map.delete(tree.data, key)}
+      false -> tree
+    end
+  end
+
   def find(tree, key) do
     case Map.has_key?(tree.data, key) do
       false -> {:error, :not_found}
@@ -47,5 +54,6 @@ end
 defimpl Bex.Tree, for: Bex.SingleRoot do
   def insert(tree, key, value), do: Bex.SingleRoot.insert(tree, key, value)
   def find(tree, key), do: Bex.SingleRoot.find(tree, key)
+  def delete(tree, key), do: Bex.SingleRoot.delete(tree, key)
   def height(tree), do: Bex.SingleRoot.height(tree)
 end

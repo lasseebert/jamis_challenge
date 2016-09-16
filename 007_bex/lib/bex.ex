@@ -18,6 +18,10 @@ defmodule Bex do
     Tree.find(tree, key)
   end
 
+  def delete(tree, key) do
+    Tree.delete(tree, key)
+  end
+
   def height(tree) do
     Tree.height(tree)
   end
