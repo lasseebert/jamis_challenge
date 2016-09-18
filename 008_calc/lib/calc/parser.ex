@@ -20,6 +20,9 @@ defmodule Calc.Parser do
   def call(tokens) do
     with {:ok, expression, []} <- parse_expression(tokens) do
       {:ok, expression}
+    else
+      {:ok, _expression, rest} -> {:error, "Tail not parsed: #{rest |> inspect}"}
+      error -> error
     end
   end
 
@@ -61,6 +64,9 @@ defmodule Calc.Parser do
   defp parse_factor([:lparen | rest]) do
     with {:ok, expression, [:rparen | rest]} <- parse_expression(rest),
          do: {:ok, expression, rest}
+    else
+      {:ok, _expression, rest} -> {:error, "Missing right parenthesis"}
+      error -> error
   end
   defp parse_factor([:- | rest]) do
     with {:ok, factor, rest} <- parse_factor(rest),
