@@ -1,8 +1,16 @@
 defmodule Calc.Interpreter do
-  def call(ast) do
+  def call(asts) do
+
     state = %{}
-    with {:ok, result, _state} <- eval(ast, state) do
-      result
+    eval_multi(asts, state, nil)
+  end
+
+  defp eval_multi([], _state, last_value) do
+    {:ok, last_value}
+  end
+  defp eval_multi([first | rest], state, _) do
+    with {:ok, result, state} <- eval(first, state) do
+      eval_multi(rest, state, result)
     end
   end
 

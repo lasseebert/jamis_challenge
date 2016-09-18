@@ -40,4 +40,8 @@ defmodule CalcTest do
   test "variable assignment" do
     assert Calc.eval("(a = 1) + a") == 2
   end
+
+  test "multiple expressions" do
+    assert Calc.eval("x = 5; y = 3; (x + 1) * y") == 18
+  end
 end

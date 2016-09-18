@@ -2,6 +2,9 @@ defmodule Calc.Parser do
   @moduledoc """
   Parser for simple arithmetics:
 
+  expressions      = expression more-expressions
+  more_expressions = ';' expressions
+                   | ()
   expression = term expr-op
              | var '=' expression ;
   expr-op    = '+' expression
@@ -24,12 +27,30 @@ defmodule Calc.Parser do
   """
 
   def call(tokens) do
-    with {:ok, expression, []} <- parse_expression(tokens) do
-      {:ok, expression}
+    with {:ok, expressions, []} <- parse_expressions(tokens) do
+      {:ok, expressions}
     else
-      {:ok, _expression, rest} -> {:error, "Tail not parsed: #{rest |> inspect}"}
+      {:ok, _expressions, rest} -> {:error, "Tail not parsed: #{rest |> inspect}"}
       error -> error
     end
+  end
+
+  # expressions      = expression more-expressions
+  defp parse_expressions(tokens) do
+    with {:ok, expression, rest} <- parse_expression(tokens) do
+      parse_more_expressions(rest, expression)
+    end
+  end
+
+  # more_expressions = ';' expressions
+  #                  | ()
+  defp parse_more_expressions([:end | rest], expression) do
+    with {:ok, expressions, rest} <- parse_expressions(rest) do
+      {:ok, [expression | expressions], rest}
+    end
+  end
+  defp parse_more_expressions(tokens, expression) do
+    {:ok, [expression], tokens}
   end
 
   # expression = term expr-op

@@ -48,6 +48,10 @@ defmodule Calc.Scanner do
     {:=, rest}
   end
 
+  defp scan_next(";" <> rest) do
+    {:end, rest}
+  end
+
   defp scan_next(input) do
     cond do
       Regex.match?(~r/^[0-9]+/, input) ->
