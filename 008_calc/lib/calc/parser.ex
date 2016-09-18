@@ -7,7 +7,7 @@ defmodule Calc.Parser do
                    | ()
   expression = term expr-op
              | var '=' expression ;
-             | 'fun' '(' var ')' '{' expression  '}'
+             | 'fun' '(' var ')' '{' expressions  '}'
   expr-op    = '+' expression
              | '-' expression
              | '?' expression ':' expression
@@ -66,8 +66,8 @@ defmodule Calc.Parser do
     end
   end
   defp parse_expression([:fun_def, :lparen, {:var, _} = var, :rparen, :fun_start | rest]) do
-    with {:ok, expression, [:fun_end | rest]} <- parse_expression(rest) do
-      {:ok, {:fun_def, var, expression}, rest}
+    with {:ok, expressions, [:fun_end | rest]} <- parse_expressions(rest) do
+      {:ok, {:fun_def, var, expressions}, rest}
     else
       {:ok, _expressions, rest} -> {:error, "Function definition not parsed: #{rest |> inspect}"}
       error -> error

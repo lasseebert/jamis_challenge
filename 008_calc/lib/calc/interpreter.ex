@@ -5,6 +5,7 @@ defmodule Calc.Interpreter do
     eval_multi(asts, state, nil)
   end
 
+  defp eval_multi(expressions, state, last_value \\ nil)
   defp eval_multi([], _state, last_value) do
     {:ok, last_value}
   end
@@ -91,9 +92,9 @@ defmodule Calc.Interpreter do
     case Map.has_key?(state, fun_name) do
       true ->
         with {:ok, value, state} <- eval(value, state),
-             {:fun, param_name, expression} <- Map.get(state, fun_name) do
+             {:fun, param_name, expressions} <- Map.get(state, fun_name) do
           fun_state = Map.put(state, param_name, value)
-          eval(expression, fun_state)
+          eval_multi(expressions, fun_state)
         else
           error -> {:error, "Error evaluation function", error}
         end
