@@ -108,7 +108,9 @@ defmodule Calc.Interpreter do
           fun_state = Enum.reduce(params, state, fn {{:var, param_name}, value}, state ->
             Map.put(state, param_name, value)
           end)
-          eval_multi(expressions, fun_state)
+          with {:ok, result} <- eval_multi(expressions, fun_state) do
+            {:ok, result, state}
+          end
         else
           error -> {:error, "Error evaluation function", error}
         end

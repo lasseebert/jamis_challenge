@@ -74,7 +74,7 @@ defmodule CalcTest do
   end
 
   test "custom function has local scope" do
-    assert Calc.eval("a = 1; myfun = fun(x) { a = 2 }; a") == 1
+    assert Calc.eval("a = 1; myfun = fun() { a = 2 }; myfun(); a") == 1
   end
 
   test "multiple expressions in function" do
