@@ -56,4 +56,8 @@ defmodule CalcTest do
   test "ternary does not evaluate false part" do
     assert Calc.eval("1 ? a = 1 : a = 2; a") == 1
   end
+
+  test "nested ternary operator" do
+    assert Calc.eval("1 ? 2 ? 3 : 4 : 5") == 3
+  end
 end
