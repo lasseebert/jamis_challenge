@@ -28,28 +28,30 @@ defmodule Calc.Parser do
 
   # expression = term expr-op ;
   defp parse_expression(tokens) do
-    with {:ok, term, rest} <- parse_term(tokens),
-         {:ok, expr_op, rest} <- parse_expr_op(rest, term),
-         do: {:ok, expr_op, rest}
+    with {:ok, term, rest} <- parse_term(tokens) do
+      parse_expr_op(rest, term)
+    end
   end
 
   # term    = factor term-op ;
   defp parse_term(tokens) do
-    with {:ok, factor, rest} <- parse_factor(tokens),
-         {:ok, term_op, rest} <- parse_term_op(rest, factor),
-         do: {:ok, term_op, rest}
+    with {:ok, factor, rest} <- parse_factor(tokens) do
+      parse_term_op(rest, factor)
+    end
   end
 
   # expr-op    = '+' expression
   #            | '-' expression
   #            | () ;
   defp parse_expr_op([:+ | rest], term) do
-    with {:ok, expression, rest} <- parse_expression(rest),
-         do: {:ok, {:+, term, expression}, rest}
+    with {:ok, expression, rest} <- parse_expression(rest) do
+      {:ok, {:+, term, expression}, rest}
+    end
   end
   defp parse_expr_op([:- | rest], term) do
-    with {:ok, expression, rest} <- parse_expression(rest),
-         do: {:ok, {:-, term, expression}, rest}
+    with {:ok, expression, rest} <- parse_expression(rest) do
+      {:ok, {:-, term, expression}, rest}
+    end
   end
   defp parse_expr_op(tokens, term) do
     {:ok, term, tokens}
@@ -62,15 +64,17 @@ defmodule Calc.Parser do
     {:ok, integer, rest}
   end
   defp parse_factor([:lparen | rest]) do
-    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest),
-         do: {:ok, expression, rest}
+    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest) do
+      {:ok, expression, rest}
     else
-      {:ok, _expression, rest} -> {:error, "Missing right parenthesis"}
+      {:ok, _expression, _rest} -> {:error, "Missing right parenthesis"}
       error -> error
+    end
   end
   defp parse_factor([:- | rest]) do
-    with {:ok, factor, rest} <- parse_factor(rest),
-         do: {:ok, {:*, {:integer, -1}, factor}, rest}
+    with {:ok, factor, rest} <- parse_factor(rest) do
+      {:ok, {:*, {:integer, -1}, factor}, rest}
+    end
   end
   defp parse_factor(tokens) do
     {:error, "Error parsing factor in #{tokens |> inspect}"}
@@ -80,12 +84,14 @@ defmodule Calc.Parser do
   #         | '/' term
   #         | () ;
   defp parse_term_op([:* | rest], factor) do
-    with {:ok, term, rest} <- parse_term(rest),
-         do: {:ok, {:*, factor, term}, rest}
+    with {:ok, term, rest} <- parse_term(rest) do
+      {:ok, {:*, factor, term}, rest}
+    end
   end
   defp parse_term_op([:/ | rest], factor) do
-    with {:ok, term, rest} <- parse_term(rest),
-         do: {:ok, {:/, factor, term}, rest}
+    with {:ok, term, rest} <- parse_term(rest) do
+      {:ok, {:/, factor, term}, rest}
+    end
   end
   defp parse_term_op(tokens, factor) do
     {:ok, factor, tokens}
