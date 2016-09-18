@@ -5,7 +5,7 @@ defmodule Calc.Scanner do
 
   @digits ~w(0 1 2 3 4 5 6 7 8 9)
 
-  def scan(input) do
+  def call(input) do
     Stream.unfold(input, &scan_next/1)
     |> Enum.to_list
   end
