@@ -96,16 +96,16 @@ defmodule Calc.Interpreter do
   end
 
   defp eval({:fun_def, argument_names, expr}, state) do
-    {:ok, {:fun, argument_names, expr}, state}
+    {:ok, {:fun, argument_names, expr, state}, state}
   end
 
   defp eval({:fun_call, {:var, fun_name}, arguments}, state) do
     case Map.has_key?(state, fun_name) do
       true ->
         with {:ok, arguments, state} <- eval_all(arguments, state),
-             {:fun, param_names, expressions} <- Map.get(state, fun_name) do
+             {:fun, param_names, expressions, fun_state} <- Map.get(state, fun_name) do
           params = Enum.zip(param_names, arguments)
-          fun_state = Enum.reduce(params, state, fn {{:var, param_name}, value}, state ->
+          fun_state = Enum.reduce(params, fun_state, fn {{:var, param_name}, value}, state ->
             Map.put(state, param_name, value)
           end)
           with {:ok, result} <- eval_multi(expressions, fun_state) do
