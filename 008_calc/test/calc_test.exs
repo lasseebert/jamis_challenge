@@ -52,4 +52,8 @@ defmodule CalcTest do
   test "ternary false" do
     assert Calc.eval("a = 0; a ? 3 : 7") == 7
   end
+
+  test "ternary does not evaluate false part" do
+    assert Calc.eval("1 ? a = 1 : a = 2; a") == 1
+  end
 end
