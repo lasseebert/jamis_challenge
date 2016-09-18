@@ -91,7 +91,7 @@ defmodule Calc.Scanner do
         integer = String.to_integer(integer_string)
         {{:integer, integer}, rest}
       Regex.match?(~r/^[a-z]+/, input) ->
-        [_, var_name, rest] = Regex.run(~r/^([a-z]+)(.*)/, input)
+        [_, var_name, rest] = Regex.run(~r/^([a-z_0-9]+)(.*)/, input)
         {{:var, var_name}, rest}
       true ->
         {input, ""}
