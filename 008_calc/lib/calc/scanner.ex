@@ -47,4 +47,8 @@ defmodule Calc.Scanner do
     integer = String.to_integer(integer_string)
     {{:integer, integer}, rest}
   end
+
+  defp scan_next(bogus) do
+    {bogus, ""}
+  end
 end
