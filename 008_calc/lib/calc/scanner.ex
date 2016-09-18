@@ -52,6 +52,14 @@ defmodule Calc.Scanner do
     {:end, rest}
   end
 
+  defp scan_next("?" <> rest) do
+    {:ternary_true, rest}
+  end
+
+  defp scan_next(":" <> rest) do
+    {:ternary_false, rest}
+  end
+
   defp scan_next(input) do
     cond do
       Regex.match?(~r/^[0-9]+/, input) ->

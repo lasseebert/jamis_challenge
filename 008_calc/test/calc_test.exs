@@ -44,4 +44,12 @@ defmodule CalcTest do
   test "multiple expressions" do
     assert Calc.eval("x = 5; y = 3; (x + 1) * y") == 18
   end
+
+  test "ternary true" do
+    assert Calc.eval("a = 42; a ? 3 : 7") == 3
+  end
+
+  test "ternary false" do
+    assert Calc.eval("a = 0; a ? 3 : 7") == 7
+  end
 end

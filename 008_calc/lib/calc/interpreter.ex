@@ -66,4 +66,16 @@ defmodule Calc.Interpreter do
       false -> {:error, "Variable #{name} is undefined"}
     end
   end
+
+  def eval({:if, expr, true_expr, false_expr}, state) do
+    with {:ok, expr, state} <- eval(expr, state),
+         {:ok, true_expr, state} <- eval(true_expr, state),
+         {:ok, false_expr, state} <- eval(false_expr, state) do
+      if expr == 0 do
+        {:ok, false_expr, state}
+      else
+        {:ok, true_expr, state}
+      end
+    end
+  end
 end
