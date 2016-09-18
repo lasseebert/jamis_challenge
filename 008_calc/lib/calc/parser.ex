@@ -7,7 +7,7 @@ defmodule Calc.Parser do
                    | ()
   expression = term expr-op
              | var '=' expression ;
-             | 'fun' '(' var ')' '{' expressions  '}'
+             | 'fun' '(' var-list ')' '{' expressions  '}'
   expr-op    = '+' expression
              | '-' expression
              | '?' expression ':' expression
@@ -25,9 +25,19 @@ defmodule Calc.Parser do
   factor = integer
          | '(' expression ')'
          | '-' factor ;
-         | var '(' expression ')'
+         | var '(' argument-list ')'
          | var
          | built_in '(' expression ')'
+
+  var-list = vars
+           | ()
+  vars = var
+       | var ',' vars
+
+  argument-list = arguments
+                | ()
+  arguments = expression
+            | expression ',' arguments
   """
 
   def call(tokens) do
@@ -59,15 +69,16 @@ defmodule Calc.Parser do
 
   # expression = term expr-op
   #            | var '=' expression ;
-  #            | 'fun' '(' var ')' '{' expression  '}'
+  #            | 'fun' '(' var-list ')' '{' expressions  '}'
   defp parse_expression([{:var, _} = var, := | rest]) do
     with {:ok, expression, rest} <- parse_expression(rest) do
       {:ok, {:assign, var, expression}, rest}
     end
   end
-  defp parse_expression([:fun_def, :lparen, {:var, _} = var, :rparen, :fun_start | rest]) do
-    with {:ok, expressions, [:fun_end | rest]} <- parse_expressions(rest) do
-      {:ok, {:fun_def, var, expressions}, rest}
+  defp parse_expression([:fun_def, :lparen | rest]) do
+    with {:ok, var_list, [:rparen, :fun_start | rest]} <- parse_var_list(rest),
+         {:ok, expressions, [:fun_end | rest]} <- parse_expressions(rest) do
+       {:ok, {:fun_def, var_list, expressions}, rest}
     else
       {:ok, _expressions, rest} -> {:error, "Function definition not parsed: #{rest |> inspect}"}
       error -> error
@@ -115,7 +126,7 @@ defmodule Calc.Parser do
   # factor = integer
   #        | '(' expression ')'
   #        | '-' factor ;
-  #        | var '(' expression ')'
+  #        | var '(' argument-list ')'
   #        | var
   #        | built_in '(' expression ')'
   defp parse_factor([{:integer, _} = integer | rest]) do
@@ -135,10 +146,10 @@ defmodule Calc.Parser do
     end
   end
   defp parse_factor([{:var, _} = var, :lparen | rest]) do
-    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest) do
-      {:ok, {:fun_call, var, expression}, rest}
+    with {:ok, arguments, [:rparen | rest]} <- parse_argument_list(rest) do
+      {:ok, {:fun_call, var, arguments}, rest}
     else
-      {:ok, _expression, _rest} -> {:error, "Missing right parenthesis in function call"}
+      {:ok, _, rest} -> {:error, "Missing right parenthesis in function call", rest}
       error -> error
     end
   end
@@ -190,5 +201,52 @@ defmodule Calc.Parser do
   end
   defp parse_exp_op(tokens, factor) do
     {:ok, factor, tokens}
+  end
+
+  # var-list = vars
+  #          | ()
+  def parse_var_list([{:var, _} | _rest] = tokens) do
+    parse_vars(tokens)
+  end
+  def parse_var_list(tokens) do
+    {:ok, [], tokens}
+  end
+
+  # vars = var
+  #      | var ',' vars
+  def parse_vars([{:var, _} = var, :comma | rest]) do
+    with {:ok, next_vars, rest} <- parse_vars(rest) do
+      {:ok, [var | next_vars], rest}
+    end
+  end
+  def parse_vars([{:var, _} = var | rest]) do
+    {:ok, [var], rest}
+  end
+  def parse_vars(tokens) do
+    {:error, "Expected vars", tokens}
+  end
+
+  # argument-list = arguments
+  #               | ()
+  def parse_argument_list([:rparen | _rest] = tokens) do
+    {:ok, [], tokens}
+  end
+  def parse_argument_list(tokens) do
+    parse_arguments(tokens)
+  end
+
+  # arguments = expression
+  #           | expression ',' arguments
+  def parse_arguments(tokens) do
+    with {:ok, expression, rest} <- parse_expression(tokens) do
+      case rest do
+        [:comma | rest] ->
+          with {:ok, next_arguments, rest} <- parse_arguments(rest) do
+            {:ok, [expression | next_arguments], rest}
+          end
+        rest ->
+          {:ok, [expression], rest}
+      end
+    end
   end
 end

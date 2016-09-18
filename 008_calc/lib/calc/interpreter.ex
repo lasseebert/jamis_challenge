@@ -15,6 +15,17 @@ defmodule Calc.Interpreter do
     end
   end
 
+  defp eval_all(expression, state, acc \\ [])
+  defp eval_all([], state, acc) do
+    {:ok, acc |> Enum.reverse, state}
+  end
+
+  defp eval_all([first | rest], state, acc) do
+    with {:ok, value, state} <- eval(first, state) do
+      eval_all(rest, state, [value | acc])
+    end
+  end
+
   defp eval({:integer, integer}, state) do
     {:ok, integer, state}
   end
@@ -84,16 +95,19 @@ defmodule Calc.Interpreter do
     end
   end
 
-  defp eval({:fun_def, {:var, param_name}, expr}, state) do
-    {:ok, {:fun, param_name, expr}, state}
+  defp eval({:fun_def, argument_names, expr}, state) do
+    {:ok, {:fun, argument_names, expr}, state}
   end
 
-  defp eval({:fun_call, {:var, fun_name}, value}, state) do
+  defp eval({:fun_call, {:var, fun_name}, arguments}, state) do
     case Map.has_key?(state, fun_name) do
       true ->
-        with {:ok, value, state} <- eval(value, state),
-             {:fun, param_name, expressions} <- Map.get(state, fun_name) do
-          fun_state = Map.put(state, param_name, value)
+        with {:ok, arguments, state} <- eval_all(arguments, state),
+             {:fun, param_names, expressions} <- Map.get(state, fun_name) do
+          params = Enum.zip(param_names, arguments)
+          fun_state = Enum.reduce(params, state, fn {{:var, param_name}, value}, state ->
+            Map.put(state, param_name, value)
+          end)
           eval_multi(expressions, fun_state)
         else
           error -> {:error, "Error evaluation function", error}

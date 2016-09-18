@@ -72,6 +72,10 @@ defmodule Calc.Scanner do
     {:fun_end, rest}
   end
 
+  defp scan_next("," <> rest) do
+    {:comma, rest}
+  end
+
   defp scan_next("cos" <> rest) do
     {{:built_in, :cos}, rest}
   end

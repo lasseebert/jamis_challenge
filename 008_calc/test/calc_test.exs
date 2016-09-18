@@ -80,4 +80,12 @@ defmodule CalcTest do
   test "multiple expressions in function" do
     assert Calc.eval("myfun = fun(x) { y = 1; x + y }; myfun(4)") == 5
   end
+
+  test "function with no parameters" do
+    assert Calc.eval("myfun = fun() { 42 }; myfun()") == 42
+  end
+
+  test "function with many parameters" do
+    assert Calc.eval("myfun = fun(x, y, z) { x + y + z }; myfun(1, 2, 3)") == 6
+  end
 end
