@@ -2,7 +2,8 @@ defmodule Calc.Parser do
   @moduledoc """
   Parser for simple arithmetics:
 
-  expression = term expr-op ;
+  expression = term expr-op
+             | var '=' expression ;
   expr-op    = '+' expression
              | '-' expression
              | () ;
@@ -19,6 +20,7 @@ defmodule Calc.Parser do
   factor = integer
          | '(' expression ')'
          | '-' factor ;
+         | var
   """
 
   def call(tokens) do
@@ -30,7 +32,13 @@ defmodule Calc.Parser do
     end
   end
 
-  # expression = term expr-op ;
+  # expression = term expr-op
+  #            | var '=' expression ;
+  defp parse_expression([{:var, _} = var, := | rest]) do
+    with {:ok, expression, rest} <- parse_expression(rest) do
+      {:ok, {:assign, var, expression}, rest}
+    end
+  end
   defp parse_expression(tokens) do
     with {:ok, term, rest} <- parse_term(tokens) do
       parse_expr_op(rest, term)
@@ -64,6 +72,7 @@ defmodule Calc.Parser do
   # factor = integer
   #        | '(' expression ')'
   #        | '-' factor ;
+  #        | var
   defp parse_factor([{:integer, _} = integer | rest]) do
     {:ok, integer, rest}
   end
@@ -79,6 +88,9 @@ defmodule Calc.Parser do
     with {:ok, factor, rest} <- parse_factor(rest) do
       {:ok, {:*, {:integer, -1}, factor}, rest}
     end
+  end
+  defp parse_factor([{:var, _} = var | rest]) do
+    {:ok, var, rest}
   end
   defp parse_factor(tokens) do
     {:error, "Error parsing factor in #{tokens |> inspect}"}

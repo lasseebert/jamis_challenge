@@ -36,4 +36,8 @@ defmodule CalcTest do
   test "exponential precedence" do
     assert Calc.eval("4 * 2 ^ 3") == 32
   end
+
+  test "variable assignment" do
+    assert Calc.eval("(a = 1) + a") == 2
+  end
 end

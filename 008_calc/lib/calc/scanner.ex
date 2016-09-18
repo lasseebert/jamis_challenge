@@ -3,8 +3,6 @@ defmodule Calc.Scanner do
   Splits a string into tokens
   """
 
-  @digits ~w(0 1 2 3 4 5 6 7 8 9)
-
   def call(input) do
     Stream.unfold(input, &scan_next/1)
     |> Enum.to_list
@@ -46,13 +44,21 @@ defmodule Calc.Scanner do
     {:^, rest}
   end
 
-  defp scan_next(<<digit::binary-1, _rest::binary>> = input) when digit in @digits do
-    [_, integer_string, rest] = Regex.run(~r/^([0-9]+)(.*)/, input)
-    integer = String.to_integer(integer_string)
-    {{:integer, integer}, rest}
+  defp scan_next("=" <> rest) do
+    {:=, rest}
   end
 
-  defp scan_next(bogus) do
-    {bogus, ""}
+  defp scan_next(input) do
+    cond do
+      Regex.match?(~r/^[0-9]+/, input) ->
+        [_, integer_string, rest] = Regex.run(~r/^([0-9]+)(.*)/, input)
+        integer = String.to_integer(integer_string)
+        {{:integer, integer}, rest}
+      Regex.match?(~r/^[a-z]+/, input) ->
+        [_, var_name, rest] = Regex.run(~r/^([a-z]+)(.*)/, input)
+        {{:var, var_name}, rest}
+      true ->
+        {input, ""}
+    end
   end
 end

@@ -6,7 +6,7 @@ defmodule Calc do
   def eval(input) do
     with tokens <- Scanner.call(input),
          {:ok, ast} <- Parser.call(tokens),
-         result <- Interpreter.call(ast),
+         {:ok, result} <- Interpreter.call(ast),
          do: result
   end
 end
