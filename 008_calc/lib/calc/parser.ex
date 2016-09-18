@@ -25,6 +25,7 @@ defmodule Calc.Parser do
          | '(' expression ')'
          | '-' factor ;
          | var
+         | built_in '(' expression ')'
   """
 
   def call(tokens) do
@@ -104,6 +105,7 @@ defmodule Calc.Parser do
   #        | '(' expression ')'
   #        | '-' factor ;
   #        | var
+  #        | built_in '(' expression ')'
   defp parse_factor([{:integer, _} = integer | rest]) do
     {:ok, integer, rest}
   end
@@ -122,6 +124,14 @@ defmodule Calc.Parser do
   end
   defp parse_factor([{:var, _} = var | rest]) do
     {:ok, var, rest}
+  end
+  defp parse_factor([{:built_in, _} = built_in, :lparen | rest]) do
+    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest) do
+      {:ok, {built_in, expression}, rest}
+    else
+      {:ok, _expression, _rest} -> {:error, "Missing right parenthesis for built_in function #{built_in |> inspect}"}
+      error -> error
+    end
   end
   defp parse_factor(tokens) do
     {:error, "Error parsing factor in #{tokens |> inspect}"}

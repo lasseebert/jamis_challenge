@@ -60,6 +60,14 @@ defmodule Calc.Scanner do
     {:ternary_false, rest}
   end
 
+  defp scan_next("cos" <> rest) do
+    {{:built_in, :cos}, rest}
+  end
+
+  defp scan_next("sin" <> rest) do
+    {{:built_in, :sin}, rest}
+  end
+
   defp scan_next(input) do
     cond do
       Regex.match?(~r/^[0-9]+/, input) ->

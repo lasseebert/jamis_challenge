@@ -76,4 +76,13 @@ defmodule Calc.Interpreter do
       end
     end
   end
+
+  def eval({{:built_in, name}, expression}, state) do
+    with {:ok, expression, state} <- eval(expression, state) do
+      {:ok, built_in(name, expression), state}
+    end
+  end
+
+  def built_in(:cos, value), do: :math.cos(value)
+  def built_in(:sin, value), do: :math.sin(value)
 end

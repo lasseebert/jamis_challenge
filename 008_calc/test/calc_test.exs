@@ -60,4 +60,12 @@ defmodule CalcTest do
   test "nested ternary operator" do
     assert Calc.eval("1 ? 2 ? 3 : 4 : 5") == 3
   end
+
+  test "cosine" do
+    assert Calc.eval("cos(0)") == 1
+  end
+
+  test "sine" do
+    assert Calc.eval("sin(0)") == 0
+  end
 end
