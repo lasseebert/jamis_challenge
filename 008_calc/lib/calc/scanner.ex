@@ -60,6 +60,18 @@ defmodule Calc.Scanner do
     {:ternary_false, rest}
   end
 
+  defp scan_next("fun" <> rest) do
+    {:fun_def, rest}
+  end
+
+  defp scan_next("{" <> rest) do
+    {:fun_start, rest}
+  end
+
+  defp scan_next("}" <> rest) do
+    {:fun_end, rest}
+  end
+
   defp scan_next("cos" <> rest) do
     {{:built_in, :cos}, rest}
   end

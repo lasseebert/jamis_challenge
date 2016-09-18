@@ -68,4 +68,12 @@ defmodule CalcTest do
   test "sine" do
     assert Calc.eval("sin(0)") == 0
   end
+
+  test "custom function with one parameter" do
+    assert Calc.eval("square = fun(x) { x * x }; square(6)") == 36
+  end
+
+  test "custom function has local scope" do
+    assert Calc.eval("a = 1; myfun = fun(x) { a = 2 }; a") == 1
+  end
 end

@@ -7,6 +7,7 @@ defmodule Calc.Parser do
                    | ()
   expression = term expr-op
              | var '=' expression ;
+             | 'fun' '(' var ')' '{' expression  '}'
   expr-op    = '+' expression
              | '-' expression
              | '?' expression ':' expression
@@ -24,6 +25,7 @@ defmodule Calc.Parser do
   factor = integer
          | '(' expression ')'
          | '-' factor ;
+         | var '(' expression ')'
          | var
          | built_in '(' expression ')'
   """
@@ -57,9 +59,18 @@ defmodule Calc.Parser do
 
   # expression = term expr-op
   #            | var '=' expression ;
+  #            | 'fun' '(' var ')' '{' expression  '}'
   defp parse_expression([{:var, _} = var, := | rest]) do
     with {:ok, expression, rest} <- parse_expression(rest) do
       {:ok, {:assign, var, expression}, rest}
+    end
+  end
+  defp parse_expression([:fun_def, :lparen, {:var, _} = var, :rparen, :fun_start | rest]) do
+    with {:ok, expression, [:fun_end | rest]} <- parse_expression(rest) do
+      {:ok, {:fun_def, var, expression}, rest}
+    else
+      {:ok, _expressions, rest} -> {:error, "Function definition not parsed: #{rest |> inspect}"}
+      error -> error
     end
   end
   defp parse_expression(tokens) do
@@ -104,6 +115,7 @@ defmodule Calc.Parser do
   # factor = integer
   #        | '(' expression ')'
   #        | '-' factor ;
+  #        | var '(' expression ')'
   #        | var
   #        | built_in '(' expression ')'
   defp parse_factor([{:integer, _} = integer | rest]) do
@@ -120,6 +132,14 @@ defmodule Calc.Parser do
   defp parse_factor([:- | rest]) do
     with {:ok, factor, rest} <- parse_factor(rest) do
       {:ok, {:*, {:integer, -1}, factor}, rest}
+    end
+  end
+  defp parse_factor([{:var, _} = var, :lparen | rest]) do
+    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest) do
+      {:ok, {:fun_call, var, expression}, rest}
+    else
+      {:ok, _expression, _rest} -> {:error, "Missing right parenthesis in function call"}
+      error -> error
     end
   end
   defp parse_factor([{:var, _} = var | rest]) do
