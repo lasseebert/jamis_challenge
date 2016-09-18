@@ -7,10 +7,14 @@ defmodule Calc.Parser do
              | '-' expression
              | () ;
 
-  term    = factor term-op ;
+  term    = exp term-op ;
   term-op = '\*' term
           | '/' term
           | () ;
+
+  exp    = factor exp-op ;
+  exp-op = '^' exp
+         | () ;
 
   factor = integer
          | '(' expression ')'
@@ -33,10 +37,10 @@ defmodule Calc.Parser do
     end
   end
 
-  # term    = factor term-op ;
+  # term    = exp term-op ;
   defp parse_term(tokens) do
-    with {:ok, factor, rest} <- parse_factor(tokens) do
-      parse_term_op(rest, factor)
+    with {:ok, exp, rest} <- parse_exp(tokens) do
+      parse_term_op(rest, exp)
     end
   end
 
@@ -94,6 +98,24 @@ defmodule Calc.Parser do
     end
   end
   defp parse_term_op(tokens, factor) do
+    {:ok, factor, tokens}
+  end
+
+  # exp    = factor exp-op ;
+  defp parse_exp(tokens) do
+    with {:ok, factor, rest} <- parse_factor(tokens) do
+      parse_exp_op(rest, factor)
+    end
+  end
+
+  # exp-op = '^' exp
+  #        | () ;
+  defp parse_exp_op([:^ | rest], factor) do
+    with {:ok, exp, rest} <- parse_exp(rest) do
+      {:ok, {:^, factor, exp}, rest}
+    end
+  end
+  defp parse_exp_op(tokens, factor) do
     {:ok, factor, tokens}
   end
 end

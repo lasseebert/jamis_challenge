@@ -42,6 +42,10 @@ defmodule Calc.Scanner do
     {:rparen, rest}
   end
 
+  defp scan_next("^" <> rest) do
+    {:^, rest}
+  end
+
   defp scan_next(<<digit::binary-1, _rest::binary>> = input) when digit in @digits do
     [_, integer_string, rest] = Regex.run(~r/^([0-9]+)(.*)/, input)
     integer = String.to_integer(integer_string)

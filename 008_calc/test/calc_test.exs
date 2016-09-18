@@ -28,4 +28,12 @@ defmodule CalcTest do
   test "unary minus for expression" do
     assert Calc.eval("-(5 * 2) - 2") == -12
   end
+
+  test "exponential" do
+    assert Calc.eval("2 ^ 3") == 8
+  end
+
+  test "exponential precedence" do
+    assert Calc.eval("4 * 2 ^ 3") == 32
+  end
 end
