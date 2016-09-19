@@ -136,6 +136,8 @@ List functions:
 Any data type:
 * `print(x)`. Will print out the given argument and return the same argument. Good for debugging.
 
+## Example
+
 Example of a program that can find prime factors of a number:
 
 ```
