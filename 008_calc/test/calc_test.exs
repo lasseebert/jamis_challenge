@@ -135,11 +135,13 @@ defmodule CalcTest do
       fib = fun(n) {
         run_fib(n, 0, 1)
       }
+
       run_fib = fun(n, a, b) {
         n == 0 ?
           a :
           run_fib(n - 1, b, a + b)
       }
+
       fib(10)
     """
     assert Calc.eval(program) == 55
