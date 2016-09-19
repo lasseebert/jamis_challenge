@@ -51,6 +51,10 @@ defmodule Calc.Scanner do
     {:==, rest}
   end
 
+  defp scan_next("<" <> rest) do
+    {:<, rest}
+  end
+
   defp scan_next("=" <> rest) do
     {:=, rest}
   end
@@ -93,6 +97,14 @@ defmodule Calc.Scanner do
 
   defp scan_next("sin" <> rest) do
     {{:built_in, :sin}, rest}
+  end
+
+  defp scan_next("sqrt" <> rest) do
+    {{:built_in, :sqrt}, rest}
+  end
+
+  defp scan_next("floor" <> rest) do
+    {{:built_in, :floor}, rest}
   end
 
   defp scan_next("print" <> rest) do

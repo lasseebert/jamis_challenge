@@ -72,6 +72,13 @@ defmodule Calc.Interpreter do
          end
   end
 
+  defp eval({:<, left, right}, state) do
+    with {:ok, left, state} <- eval(left, state),
+         {:ok, right, state} <- eval(right, state) do
+           {:ok, (if left < right, do: 1, else: 0), state}
+         end
+  end
+
   defp eval({:assign, {:var, name}, expression}, state) do
     with {:ok, value, state} <- eval(expression, state) do
       state = Map.put(state, name, value)
@@ -86,12 +93,12 @@ defmodule Calc.Interpreter do
     end
   end
 
-  defp eval({:if, expr, true_expr, false_expr}, state) do
+  defp eval({:if, expr, true_exprs, false_exprs}, state) do
     with {:ok, expr, state} <- eval(expr, state) do
       if expr == 0 do
-        eval(false_expr, state)
+        eval_multi(false_exprs, state)
       else
-        eval(true_expr, state)
+        eval_multi(true_exprs, state)
       end
     end
   end
@@ -143,4 +150,6 @@ defmodule Calc.Interpreter do
   defp built_in(:print, [value]), do: IO.inspect(value)
   defp built_in(:unshift, [list, value]), do: [value | list]
   defp built_in(:reverse, [list]), do: list |> Enum.reverse
+  defp built_in(:sqrt, [value]), do: :math.sqrt(value)
+  defp built_in(:floor, [value]), do: trunc(value)
 end

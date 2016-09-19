@@ -163,4 +163,34 @@ defmodule CalcTest do
     """
     assert Calc.eval(program) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   end
+
+  test "working wit lists II" do
+    program = """
+      factors = fun(n) {
+        do_factors(n, 2, [])
+      }
+
+      do_factors = fun(n, i, acc) {
+        sqrt(n) < i
+          ?
+            acc = unshift(acc, n)
+            reverse(acc)
+          :
+            div = n / i
+            div == floor(div) ?
+              do_factors(n / i, i, unshift(acc, i)) :
+              do_factors(n, i + 1, acc)
+      }
+
+      factors(6546546546)
+    """
+    assert Calc.eval(program) == [2, 3, 107, 149, 68437]
+  end
+
+  test "ternary operator with multiple expressions inside" do
+    program = """
+      1 ? a = 2; a : 45
+    """
+    assert Calc.eval(program) == 2
+  end
 end

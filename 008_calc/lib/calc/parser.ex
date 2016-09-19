@@ -9,6 +9,7 @@ defmodule Calc.Parser do
           | equals : '?' ternary : ternary
   equals = expression
          | expression == expression
+         | expression < expression
   expression = term expr-op
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
@@ -48,8 +49,8 @@ defmodule Calc.Parser do
     with {:ok, expressions, []} <- parse_expressions(tokens) do
       {:ok, expressions}
     else
-      {:ok, _expressions, rest} -> {:error, "Tail not parsed: #{rest |> inspect}"}
-      error -> error
+      {:ok, _expressions, rest} ->
+        {:error, "Could not parse tail:", parse_expressions(rest)}
     end
   end
 
@@ -82,9 +83,9 @@ defmodule Calc.Parser do
     with {:ok, expression, rest} <- parse_equals(tokens) do
       case rest do
         [:ternary_true | rest] ->
-          with {:ok, true_expression, [:ternary_false | rest]} <- parse_ternary(rest),
-               {:ok, false_expression, rest} <- parse_ternary(rest) do
-            {:ok, {:if, expression, true_expression, false_expression}, rest}
+          with {:ok, true_expressions, [:ternary_false | rest]} <- parse_expressions(rest),
+               {:ok, false_expressions, rest} <- parse_expressions(rest) do
+            {:ok, {:if, expression, true_expressions, false_expressions}, rest}
           else
             error -> {:error, "Error parsing ternary operator", error}
           end
@@ -96,12 +97,17 @@ defmodule Calc.Parser do
 
   # equals = expression
   #        | expression == expression
+  #        | expression < expression
   def parse_equals(tokens) do
     with {:ok, expression, rest} <- parse_expression(tokens) do
       case rest do
         [:== | rest] ->
           with {:ok, expression_2, rest} <- parse_expression(rest) do
             {:ok, {:==, expression, expression_2}, rest}
+          end
+        [:< | rest] ->
+          with {:ok, expression_2, rest} <- parse_expression(rest) do
+            {:ok, {:<, expression, expression_2}, rest}
           end
         rest ->
           {:ok, expression, rest}
