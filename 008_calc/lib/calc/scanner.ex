@@ -91,6 +91,10 @@ defmodule Calc.Scanner do
     {{:built_in, :sin}, rest}
   end
 
+  defp scan_next("print" <> rest) do
+    {{:built_in, :print}, rest}
+  end
+
   defp scan_next(input) do
     cond do
       Regex.match?(~r/^[0-9]+/, input) ->

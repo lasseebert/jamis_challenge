@@ -136,4 +136,5 @@ defmodule Calc.Interpreter do
 
   defp built_in(:cos, value), do: :math.cos(value)
   defp built_in(:sin, value), do: :math.sin(value)
+  defp built_in(:print, value), do: IO.inspect(value)
 end
