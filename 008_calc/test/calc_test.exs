@@ -146,4 +146,21 @@ defmodule CalcTest do
     """
     assert Calc.eval(program) == 55
   end
+
+  test "working with lists" do
+    program = """
+      count = fun(n) {
+        do_count(1, n, [])
+      }
+
+      do_count = fun(next, max, acc) {
+        next - 1 == max ?
+          reverse(acc) :
+          do_count(next + 1, max, unshift(acc, next))
+      }
+
+      count(10)
+    """
+    assert Calc.eval(program) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  end
 end

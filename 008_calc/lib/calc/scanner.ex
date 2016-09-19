@@ -83,6 +83,10 @@ defmodule Calc.Scanner do
     {:comma, rest}
   end
 
+  defp scan_next("[]" <> rest) do
+    {:empty_list, rest}
+  end
+
   defp scan_next("cos" <> rest) do
     {{:built_in, :cos}, rest}
   end
@@ -93,6 +97,14 @@ defmodule Calc.Scanner do
 
   defp scan_next("print" <> rest) do
     {{:built_in, :print}, rest}
+  end
+
+  defp scan_next("unshift" <> rest) do
+    {{:built_in, :unshift}, rest}
+  end
+
+  defp scan_next("reverse" <> rest) do
+    {{:built_in, :reverse}, rest}
   end
 
   defp scan_next(input) do

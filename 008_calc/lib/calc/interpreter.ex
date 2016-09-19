@@ -134,7 +134,13 @@ defmodule Calc.Interpreter do
     end
   end
 
+  defp eval(:empty_list, state) do
+    {:ok, [], state}
+  end
+
   defp built_in(:cos, [value]), do: :math.cos(value)
   defp built_in(:sin, [value]), do: :math.sin(value)
   defp built_in(:print, [value]), do: IO.inspect(value)
+  defp built_in(:unshift, [list, value]), do: [value | list]
+  defp built_in(:reverse, [list]), do: list |> Enum.reverse
 end
