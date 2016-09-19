@@ -65,6 +65,13 @@ defmodule Calc.Interpreter do
          end
   end
 
+  defp eval({:==, left, right}, state) do
+    with {:ok, left, state} <- eval(left, state),
+         {:ok, right, state} <- eval(right, state) do
+           {:ok, (if left == right, do: 1, else: 0), state}
+         end
+  end
+
   defp eval({:assign, {:var, name}, expression}, state) do
     with {:ok, value, state} <- eval(expression, state) do
       state = Map.put(state, name, value)

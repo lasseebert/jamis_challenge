@@ -44,6 +44,10 @@ defmodule Calc.Scanner do
     {:^, rest}
   end
 
+  defp scan_next("==" <> rest) do
+    {:==, rest}
+  end
+
   defp scan_next("=" <> rest) do
     {:=, rest}
   end

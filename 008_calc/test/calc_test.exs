@@ -92,4 +92,12 @@ defmodule CalcTest do
   test "higher order functions" do
     assert Calc.eval("plus = fun(x) { fun(y) { y + x } }; plustwo = plus(2); plustwo(5)") == 7
   end
+
+  test "equals false" do
+    assert Calc.eval("1 == 2") == 0
+  end
+
+  test "equals true" do
+    assert Calc.eval("1 == 1") == 1
+  end
 end
