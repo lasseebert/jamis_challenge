@@ -5,14 +5,15 @@ defmodule Calc.Parser do
   expressions      = ternary more-expressions
   more_expressions = ';' expressions
                    | ()
-  ternary = expression
-          | expression : '?' ternary : ternary
+  ternary = equals
+          | equals : '?' ternary : ternary
+  equals = expression
+         | expression == expression
   expression = term expr-op
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
   expr-op    = '+' expression
              | '-' expression
-             | '==' expression
              | () ;
 
   term    = exp term-op ;
@@ -69,10 +70,10 @@ defmodule Calc.Parser do
     {:ok, [expression], tokens}
   end
 
-  # ternary = expression
-  #         | expression : '?' ternary : ternary
+  # ternary = equals
+  #         | equals : '?' ternary : ternary
   def parse_ternary(tokens) do
-    with {:ok, expression, rest} <- parse_expression(tokens) do
+    with {:ok, expression, rest} <- parse_equals(tokens) do
       case rest do
         [:ternary_true | rest] ->
           with {:ok, true_expression, [:ternary_false | rest]} <- parse_ternary(rest),
@@ -80,6 +81,21 @@ defmodule Calc.Parser do
             {:ok, {:if, expression, true_expression, false_expression}, rest}
           else
             error -> {:error, "Error parsing ternary operator", error}
+          end
+        rest ->
+          {:ok, expression, rest}
+      end
+    end
+  end
+
+  # equals = expression
+  #        | expression == expression
+  def parse_equals(tokens) do
+    with {:ok, expression, rest} <- parse_expression(tokens) do
+      case rest do
+        [:== | rest] ->
+          with {:ok, expression_2, rest} <- parse_expression(rest) do
+            {:ok, {:==, expression, expression_2}, rest}
           end
         rest ->
           {:ok, expression, rest}
@@ -119,7 +135,6 @@ defmodule Calc.Parser do
 
   # expr-op    = '+' expression
   #            | '-' expression
-  #            | '==' expression
   #            | () ;
   defp parse_expr_op([:+ | rest], term) do
     with {:ok, expression, rest} <- parse_expression(rest) do
@@ -129,11 +144,6 @@ defmodule Calc.Parser do
   defp parse_expr_op([:- | rest], term) do
     with {:ok, expression, rest} <- parse_expression(rest) do
       {:ok, {:-, term, expression}, rest}
-    end
-  end
-  defp parse_expr_op([:== | rest], term) do
-    with {:ok, expression, rest} <- parse_expression(rest) do
-      {:ok, {:==, term, expression}, rest}
     end
   end
   defp parse_expr_op(tokens, term) do

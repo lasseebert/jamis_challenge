@@ -104,4 +104,12 @@ defmodule CalcTest do
   test "equals true" do
     assert Calc.eval("1 == 1") == 1
   end
+
+  test "equals with plus" do
+    assert Calc.eval("1 + 2 == 4 + 8") == 0
+  end
+
+  test "equals with ternary" do
+    assert Calc.eval("1 == 2 ? 3 : 4") == 4
+  end
 end
