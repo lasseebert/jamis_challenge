@@ -48,4 +48,3 @@ Stuff I would like to add:
 * Be able to print a value to console: `print(5)`
 * Create empty list, push to list: `count = fun(list, n) { n ? count(push(list, n), n - 1) : list }; count([], 5) # => [5, 4, 3, 2, 1]`
 * Default argument values: `a = fun(b = 1, c = 2) { b + c }; a(5) # => 7`
-* Multiline inputs and be able to evaluate a file

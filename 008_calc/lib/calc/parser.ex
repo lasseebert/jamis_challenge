@@ -67,7 +67,12 @@ defmodule Calc.Parser do
     end
   end
   defp parse_more_expressions(tokens, expression) do
-    {:ok, [expression], tokens}
+    # Try to parse more expressions. If it is not valid, just use the one we have
+    with {:ok, expressions, rest} <- parse_expressions(tokens) do
+      {:ok, [expression | expressions], rest}
+    else
+      _ -> {:ok, [expression], tokens}
+    end
   end
 
   # ternary = equals

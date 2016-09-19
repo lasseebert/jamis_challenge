@@ -15,6 +15,9 @@ defmodule Calc.Scanner do
   defp scan_next(" " <> rest) do
     scan_next(rest)
   end
+  defp scan_next("\n" <> rest) do
+    scan_next(rest)
+  end
 
   defp scan_next("+" <> rest) do
     {:+, rest}
@@ -91,11 +94,11 @@ defmodule Calc.Scanner do
   defp scan_next(input) do
     cond do
       Regex.match?(~r/^[0-9]+/, input) ->
-        [_, integer_string, rest] = Regex.run(~r/^([0-9]+)(.*)/, input)
+        [_, integer_string, rest] = Regex.run(~r/^([0-9]+)(.*)/sm, input)
         integer = String.to_integer(integer_string)
         {{:integer, integer}, rest}
       Regex.match?(~r/^[a-z]+/, input) ->
-        [_, var_name, rest] = Regex.run(~r/^([a-z_0-9]+)(.*)/, input)
+        [_, var_name, rest] = Regex.run(~r/^([a-z_0-9]+)(.*)/sm, input)
         {{:var, var_name}, rest}
       true ->
         {input, ""}

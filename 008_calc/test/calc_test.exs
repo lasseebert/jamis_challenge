@@ -120,4 +120,28 @@ defmodule CalcTest do
   test "recursive function II" do
     assert Calc.eval("fib = fun(n) { run_fib(n, 0, 1) }; run_fib = fun(n, a, b) { n == 0 ? a : run_fib(n - 1, b, a + b) }; fib(10)") == 55
   end
+
+  test "multiline program" do
+    program = """
+      a = 1
+      b = 2
+      a + b
+    """
+    assert Calc.eval(program) == 3
+  end
+
+  test "multiline program with function" do
+    program = """
+      fib = fun(n) {
+        run_fib(n, 0, 1)
+      }
+      run_fib = fun(n, a, b) {
+        n == 0 ?
+          a :
+          run_fib(n - 1, b, a + b)
+      }
+      fib(10)
+    """
+    assert Calc.eval(program) == 55
+  end
 end
