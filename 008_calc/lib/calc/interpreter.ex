@@ -96,9 +96,9 @@ defmodule Calc.Interpreter do
     end
   end
 
-  defp eval({{:built_in, name}, expression}, state) do
-    with {:ok, expression, state} <- eval(expression, state) do
-      {:ok, built_in(name, expression), state}
+  defp eval({{:built_in, name}, arguments}, state) do
+    with {:ok, arguments, state} <- eval_all(arguments, state) do
+      {:ok, built_in(name, arguments), state}
     end
   end
 
@@ -134,7 +134,7 @@ defmodule Calc.Interpreter do
     end
   end
 
-  defp built_in(:cos, value), do: :math.cos(value)
-  defp built_in(:sin, value), do: :math.sin(value)
-  defp built_in(:print, value), do: IO.inspect(value)
+  defp built_in(:cos, [value]), do: :math.cos(value)
+  defp built_in(:sin, [value]), do: :math.sin(value)
+  defp built_in(:print, [value]), do: IO.inspect(value)
 end

@@ -189,8 +189,8 @@ defmodule Calc.Parser do
     {:ok, var, rest}
   end
   defp parse_factor([{:built_in, _} = built_in, :lparen | rest]) do
-    with {:ok, expression, [:rparen | rest]} <- parse_expression(rest) do
-      {:ok, {built_in, expression}, rest}
+    with {:ok, arguments, [:rparen | rest]} <- parse_argument_list(rest) do
+      {:ok, {built_in, arguments}, rest}
     else
       {:ok, _expression, _rest} -> {:error, "Missing right parenthesis for built_in function #{built_in |> inspect}"}
       error -> error
