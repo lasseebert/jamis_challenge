@@ -26,6 +26,24 @@ a / b
 # => 0.5
 ```
 
+## Branching
+
+A simple ternary operator can be used as an `if`. It considers `0` to be false and all other value to be true.
+
+```
+1 ? 2 : 3
+# => 2
+```
+
+It only evaluates the part that is returned:
+
+```
+a = -10
+a < 0 ? b = 1 : b = 0
+b
+# => 1
+```
+
 ## Functions
 
 Define functions with the `fun` keyword. Bacause functions _are_ fun!
