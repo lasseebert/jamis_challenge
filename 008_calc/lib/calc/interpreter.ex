@@ -111,10 +111,18 @@ defmodule Calc.Interpreter do
       true ->
         with {:ok, arguments, state} <- eval_all(arguments, state),
              {:fun, param_names, expressions, fun_state} <- Map.get(state, fun_name) do
+          # Pair param names with argument values
           params = Enum.zip(param_names, arguments)
+
+          # Copy current state to fun state
+          fun_state = Map.merge(state, fun_state)
+
+          # Add arguments to state of the inner function
           fun_state = Enum.reduce(params, fun_state, fn {{:var, param_name}, value}, state ->
             Map.put(state, param_name, value)
           end)
+
+          # Evaluate function content in function state
           with {:ok, result} <- eval_multi(expressions, fun_state) do
             {:ok, result, state}
           end

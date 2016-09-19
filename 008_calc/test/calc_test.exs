@@ -112,4 +112,12 @@ defmodule CalcTest do
   test "equals with ternary" do
     assert Calc.eval("1 == 2 ? 3 : 4") == 4
   end
+
+  test "recursive function" do
+    assert Calc.eval("factorial = fun(x) { x == 1 ? 1 : factorial(x - 1) * x }; factorial(4)") == 24
+  end
+
+  test "recursive function II" do
+    assert Calc.eval("fib = fun(n) { run_fib(n, 0, 1) }; run_fib = fun(n, a, b) { n == 0 ? a : run_fib(n - 1, b, a + b) }; fib(10)") == 55
+  end
 end
