@@ -2,15 +2,16 @@ defmodule Calc.Parser do
   @moduledoc """
   Parser for simple arithmetics:
 
-  expressions      = expression more-expressions
+  expressions      = ternary more-expressions
   more_expressions = ';' expressions
                    | ()
+  ternary = expression
+          | expression : '?' ternary : ternary
   expression = term expr-op
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
   expr-op    = '+' expression
              | '-' expression
-             | '?' expression ':' expression
              | '==' expression
              | () ;
 
@@ -50,10 +51,10 @@ defmodule Calc.Parser do
     end
   end
 
-  # expressions      = expression more-expressions
+  # expressions      = ternary more-expressions
   defp parse_expressions(tokens) do
-    with {:ok, expression, rest} <- parse_expression(tokens) do
-      parse_more_expressions(rest, expression)
+    with {:ok, ternary, rest} <- parse_ternary(tokens) do
+      parse_more_expressions(rest, ternary)
     end
   end
 
@@ -66,6 +67,24 @@ defmodule Calc.Parser do
   end
   defp parse_more_expressions(tokens, expression) do
     {:ok, [expression], tokens}
+  end
+
+  # ternary = expression
+  #         | expression : '?' ternary : ternary
+  def parse_ternary(tokens) do
+    with {:ok, expression, rest} <- parse_expression(tokens) do
+      case rest do
+        [:ternary_true | rest] ->
+          with {:ok, true_expression, [:ternary_false | rest]} <- parse_ternary(rest),
+               {:ok, false_expression, rest} <- parse_ternary(rest) do
+            {:ok, {:if, expression, true_expression, false_expression}, rest}
+          else
+            error -> {:error, "Error parsing ternary operator", error}
+          end
+        rest ->
+          {:ok, expression, rest}
+      end
+    end
   end
 
   # expression = term expr-op
@@ -100,7 +119,6 @@ defmodule Calc.Parser do
 
   # expr-op    = '+' expression
   #            | '-' expression
-  #            | '?' expression ':' expression
   #            | '==' expression
   #            | () ;
   defp parse_expr_op([:+ | rest], term) do
@@ -111,14 +129,6 @@ defmodule Calc.Parser do
   defp parse_expr_op([:- | rest], term) do
     with {:ok, expression, rest} <- parse_expression(rest) do
       {:ok, {:-, term, expression}, rest}
-    end
-  end
-  defp parse_expr_op([:ternary_true | rest], term) do
-    with {:ok, true_expression, [:ternary_false | rest]} <- parse_expression(rest),
-         {:ok, false_expression, rest} <- parse_expression(rest) do
-      {:ok, {:if, term, true_expression, false_expression}, rest}
-    else
-      error -> {:error, "Error parsing ternary operator", error}
     end
   end
   defp parse_expr_op([:== | rest], term) do

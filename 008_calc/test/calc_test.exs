@@ -57,6 +57,10 @@ defmodule CalcTest do
     assert Calc.eval("1 ? a = 1 : a = 2; a") == 1
   end
 
+  test "ternary precedense" do
+    assert Calc.eval("1 - 1 ? 1 : 2") == 2
+  end
+
   test "nested ternary operator" do
     assert Calc.eval("1 ? 2 ? 3 : 4 : 5") == 3
   end
