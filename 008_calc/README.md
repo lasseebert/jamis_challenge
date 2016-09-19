@@ -7,42 +7,136 @@ See: http://weblog.jamisbuck.org/2016/9/17/weekly-programming-challenge-8.html
 A recursive descent parser that understands simple arithmetics, variables, a few
 built in functions and custom functions.
 
-Examples:
+All code examples below can be evaluated with `Calc.eval`
 
-```elixir
-# Simple
-Calc.eval("1 + 2")
-# returns 3
+## Simple arithmetics
 
-# Parenthesis
-Calc.eval("(1 + 2) * 3")
-# returns 9
-
-# Variables
-Calc.eval("a = 1; b = 2; a + b")
-# returns 3
-
-# Functions
-Calc.eval("square = fun(x) { x * x }; square(5)")
-# returns 25
-
-# Local scope
-Calc.eval("a = 1; myfun = fun() { a = 2; a }; myfun(); a")
-# returns 1
-
-# Functions as argument to other functions
-Calc.eval("a = fun(x) { x + 1 }; b = fun(f, x) { f(x) + 2 }; b(a, 3)")
-# returns 6
-
-# Function binds to local scope at definition allowing for higher order functions
-Calc.eval("plus = fun(x) { fun(y) { y + x } }; plustwo = plus(2); plustwo(5)")
-# returns 7
-
-# Built in functions
-Calc.eval("cos(sin(3/2))")
-# returns 0.5424085045303605
+```
+1 + 2 / 4
+(1 + 2) / 4
+# => 0.75
 ```
 
-Stuff I would like to add:
+## Variables
 
-* Default argument values: `a = fun(b = 1, c = 2) { b + c }; a(5) # => 7`
+```
+a = 1
+b = 2
+a / b
+# => 0.5
+```
+
+## Functions
+
+Define functions with the `fun` keyword. Bacause functions _are_ fun!
+
+`fun(x) { x + 1 }`
+
+A function is just a value.
+To Call a function, it must be assigned to a variable:
+
+```
+plus_one = fun(x) { x + 1 }
+plus_one(5)
+# => 6
+```
+
+The scope of the function does not pollute the outer scope:
+
+```
+b = 1
+a = fun(x) {
+  b = 2
+  print(b)
+  x + b
+}
+a(6)
+print(b)
+
+# Prints "2"
+# Prints "1"
+```
+
+But the outer scope is copied to the function scope at invoke time, which allows
+for recursive functions and higher order functions:
+
+```
+plus = fun(x) {
+  fun(y) { x + y }
+}
+plus_one = plus(1)
+plus_one(5)
+# => 6
+
+fact = fun(n) {
+  n == 1
+    ? 1
+    : fact(n - 1) * n
+}
+fact(5)
+# => 120
+```
+
+## Lists
+
+There is a little support for lists:
+
+* `[]` creates an empty list
+* `unshift(list, n)` adds an item to the start of the list, returns the updated list
+* `reverse(list)` reverses a list
+
+```
+count = fun(n) {
+  do_count(1, n, [])
+}
+
+do_count = fun(next, max, acc) {
+  next - 1 == max ?
+    reverse(acc) :
+    do_count(next + 1, max, unshift(acc, next))
+}
+
+count(10)
+# => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+## Built-in functions
+
+Are called like regular function.
+
+Number functions:
+
+* `cos(x)`
+* `sin(x)`
+* `sqrt(x)`
+
+List functions:
+
+* `unshift(list, n)`
+* `reverse(list)`
+
+Any data type:
+* `print(x)`. Will print out the given argument and return the same argument. Good for debugging.
+
+Example of a program that can find prime factors of a number:
+
+```
+factors = fun(n) {
+  do_factors(n, 2, [])
+}
+
+do_factors = fun(n, i, acc) {
+  sqrt(n) < i
+    ?
+      acc = unshift(acc, n)
+      reverse(acc)
+    :
+      div = n / i
+      div == floor(div) ?
+        do_factors(n / i, i, unshift(acc, i)) :
+        do_factors(n, i + 1, acc)
+}
+
+factors(6546546546)
+# => [2, 3, 107, 149, 68437.0]
+```
