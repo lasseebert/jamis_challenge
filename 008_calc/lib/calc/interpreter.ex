@@ -30,27 +30,6 @@ defmodule Calc.Interpreter do
     {:ok, integer, state}
   end
 
-  defp eval({:*, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, left * right, state}
-         end
-  end
-
-  defp eval({:/, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, left / right, state}
-         end
-  end
-
-  defp eval({:^, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, :math.pow(left, right), state}
-         end
-  end
-
   defp eval({{:operator, operator}, left, right}, state) do
     with {:ok, left, state} <- eval(left, state),
          {:ok, right, state} <- eval(right, state) do
@@ -145,4 +124,7 @@ defmodule Calc.Interpreter do
 
   defp operate(:+, left, right), do: left + right
   defp operate(:-, left, right), do: left - right
+  defp operate(:*, left, right), do: left * right
+  defp operate(:/, left, right), do: left / right
+  defp operate(:^, left, right), do: :math.pow(left, right)
 end

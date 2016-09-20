@@ -21,7 +21,7 @@ defmodule Calc.ParserTest do
   test "simple multiplication" do
     assert Scanner.call("1 * 2") |> Parser.call == {
      :ok,
-     [{:*, {:integer, 1}, {:integer, 2}}]
+     [{{:operator, :*}, {:integer, 1}, {:integer, 2}}]
     }
   end
 
@@ -29,11 +29,11 @@ defmodule Calc.ParserTest do
     assert Scanner.call("((((5)+2)*2)-5)/3") |> Parser.call == {
       :ok,
       [{
-        :/,
+        {:operator, :/},
         {
           {:operator, :-},
           {
-            :*,
+            {:operator, :*},
             {
               {:operator, :+},
               {:integer, 5},

@@ -169,7 +169,7 @@ defmodule Calc.Parser do
   end
   defp parse_factor([:- | rest]) do
     with {:ok, factor, rest} <- parse_factor(rest) do
-      {:ok, {:*, {:integer, -1}, factor}, rest}
+      {:ok, {{:operator, :*}, {:integer, -1}, factor}, rest}
     end
   end
   defp parse_factor([{:var, _} = var, :lparen | rest]) do
@@ -203,12 +203,12 @@ defmodule Calc.Parser do
   #         | () ;
   defp parse_term_op([:* | rest], factor) do
     with {:ok, term, rest} <- parse_term(rest) do
-      {:ok, {:*, factor, term}, rest}
+      {:ok, {{:operator, :*}, factor, term}, rest}
     end
   end
   defp parse_term_op([:/ | rest], factor) do
     with {:ok, term, rest} <- parse_term(rest) do
-      {:ok, {:/, factor, term}, rest}
+      {:ok, {{:operator, :/}, factor, term}, rest}
     end
   end
   defp parse_term_op(tokens, factor) do
@@ -226,7 +226,7 @@ defmodule Calc.Parser do
   #        | () ;
   defp parse_exp_op([:^ | rest], factor) do
     with {:ok, exp, rest} <- parse_exp(rest) do
-      {:ok, {:^, factor, exp}, rest}
+      {:ok, {{:operator, :^}, factor, exp}, rest}
     end
   end
   defp parse_exp_op(tokens, factor) do
