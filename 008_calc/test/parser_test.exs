@@ -51,6 +51,6 @@ defmodule Calc.ParserTest do
   test "calling built-in function with more than one argument" do
     program = "unshift([], 2)"
     tokens = Scanner.call(program)
-    assert Parser.call(tokens) == {:ok, [{{:built_in, "unshift"}, [:empty_list, {:integer, 2}]}]}
+    assert Parser.call(tokens) == {:ok, [{{:built_in, :unshift}, [:empty_list, {:integer, 2}]}]}
   end
 end

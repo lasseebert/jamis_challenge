@@ -3,16 +3,6 @@ defmodule Calc.Scanner do
   Splits a string into tokens
   """
 
-  @built_in_functions ~w(
-    cos
-    floor
-    print
-    reverse
-    sin
-    sqrt
-    unshift
-  )
-
   @terminals [
     {"+", :+},
     {"-", :-},
@@ -31,7 +21,15 @@ defmodule Calc.Scanner do
     {"{", :fun_start},
     {"}", :fun_end},
     {",", :comma},
-    {"[]", :empty_list}
+    {"[]", :empty_list},
+
+    {"cos", {:built_in, :cos}},
+    {"floor", {:built_in, :floor}},
+    {"print", {:built_in, :print}},
+    {"reverse", {:built_in, :reverse}},
+    {"sin", {:built_in, :sin}},
+    {"sqrt", {:built_in, :sqrt}},
+    {"unshift", {:built_in, :unshift}}
   ]
 
   def call(input) do
@@ -53,12 +51,6 @@ defmodule Calc.Scanner do
   for {key, value} <- @terminals do
     defp scan_next(unquote(key) <> rest) do
       {unquote(value), rest}
-    end
-  end
-
-  for name <- @built_in_functions do
-    defp scan_next(unquote(name) <> rest) do
-      {{:built_in, unquote(name)}, rest}
     end
   end
 
