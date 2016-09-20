@@ -145,11 +145,11 @@ defmodule Calc.Interpreter do
     {:ok, [], state}
   end
 
-  defp built_in(:cos, [value]), do: :math.cos(value)
-  defp built_in(:sin, [value]), do: :math.sin(value)
-  defp built_in(:print, [value]), do: IO.inspect(value)
-  defp built_in(:unshift, [list, value]), do: [value | list]
-  defp built_in(:reverse, [list]), do: list |> Enum.reverse
-  defp built_in(:sqrt, [value]), do: :math.sqrt(value)
-  defp built_in(:floor, [value]), do: trunc(value)
+  defp built_in("cos", [value]), do: :math.cos(value)
+  defp built_in("floor", [value]), do: trunc(value)
+  defp built_in("print", [value]), do: IO.inspect(value)
+  defp built_in("reverse", [list]), do: list |> Enum.reverse
+  defp built_in("sin", [value]), do: :math.sin(value)
+  defp built_in("sqrt", [value]), do: :math.sqrt(value)
+  defp built_in("unshift", [list, value]), do: [value | list]
 end
