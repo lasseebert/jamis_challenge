@@ -7,14 +7,14 @@ defmodule Calc.ParserTest do
   test "simple plus statement" do
     assert Scanner.call("1 + 2") |> Parser.call == {
      :ok,
-     [{:+, {:integer, 1}, {:integer, 2}}]
+     [{{:operator, :+}, {:integer, 1}, {:integer, 2}}]
     }
   end
 
   test "multiple additions" do
     assert Scanner.call("1 + 2 + 3") |> Parser.call == {
      :ok,
-     [{:+, {:integer, 1}, {:+, {:integer, 2}, {:integer, 3}}}]
+     [{{:operator, :+}, {:integer, 1}, {{:operator, :+}, {:integer, 2}, {:integer, 3}}}]
     }
   end
 
@@ -31,11 +31,11 @@ defmodule Calc.ParserTest do
       [{
         :/,
         {
-          :-,
+          {:operator, :-},
           {
             :*,
             {
-              :+,
+              {:operator, :+},
               {:integer, 5},
               {:integer, 2}
             },

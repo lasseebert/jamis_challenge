@@ -11,12 +11,9 @@ defmodule Calc.Parser do
   comparison = expression
              | expression compare-operator expression
 
-  expression = term expr-op
+  expression = term expression_operator expression
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
-  expr-op    = '+' expression
-             | '-' expression
-             | () ;
 
   term    = exp term-op ;
   term-op = '\*' term
@@ -111,7 +108,7 @@ defmodule Calc.Parser do
     end
   end
 
-  # expression = term expr-op
+  # expression = term expression_operator expression
   #            | var '=' expression ;
   #            | 'fun' '(' var-list ')' '{' expressions  '}'
   defp parse_expression([{:var, _} = var, := | rest]) do
@@ -130,7 +127,18 @@ defmodule Calc.Parser do
   end
   defp parse_expression(tokens) do
     with {:ok, term, rest} <- parse_term(tokens) do
-      parse_expr_op(rest, term)
+      case rest do
+        [:+ | rest] ->
+          with {:ok, expression, rest} <- parse_expression(rest) do
+            {:ok, {{:operator, :+}, term, expression}, rest}
+          end
+        [:- | rest] ->
+          with {:ok, expression, rest} <- parse_expression(rest) do
+            {:ok, {{:operator, :-}, term, expression}, rest}
+          end
+        rest ->
+          {:ok, term, rest}
+      end
     end
   end
 
@@ -139,23 +147,6 @@ defmodule Calc.Parser do
     with {:ok, exp, rest} <- parse_exp(tokens) do
       parse_term_op(rest, exp)
     end
-  end
-
-  # expr-op    = '+' expression
-  #            | '-' expression
-  #            | () ;
-  defp parse_expr_op([:+ | rest], term) do
-    with {:ok, expression, rest} <- parse_expression(rest) do
-      {:ok, {:+, term, expression}, rest}
-    end
-  end
-  defp parse_expr_op([:- | rest], term) do
-    with {:ok, expression, rest} <- parse_expression(rest) do
-      {:ok, {:-, term, expression}, rest}
-    end
-  end
-  defp parse_expr_op(tokens, term) do
-    {:ok, term, tokens}
   end
 
   # factor = integer

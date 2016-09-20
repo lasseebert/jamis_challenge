@@ -30,20 +30,6 @@ defmodule Calc.Interpreter do
     {:ok, integer, state}
   end
 
-  defp eval({:+, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, left + right, state}
-         end
-  end
-
-  defp eval({:-, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, left - right, state}
-         end
-  end
-
   defp eval({:*, left, right}, state) do
     with {:ok, left, state} <- eval(left, state),
          {:ok, right, state} <- eval(right, state) do
@@ -62,6 +48,13 @@ defmodule Calc.Interpreter do
     with {:ok, left, state} <- eval(left, state),
          {:ok, right, state} <- eval(right, state) do
            {:ok, :math.pow(left, right), state}
+         end
+  end
+
+  defp eval({{:operator, operator}, left, right}, state) do
+    with {:ok, left, state} <- eval(left, state),
+         {:ok, right, state} <- eval(right, state) do
+           {:ok, operate(operator, left, right), state}
          end
   end
 
@@ -111,13 +104,11 @@ defmodule Calc.Interpreter do
       true ->
         with {:ok, arguments, state} <- eval_all(arguments, state),
              {:fun, param_names, expressions, fun_state} <- Map.get(state, fun_name) do
-          # Pair param names with argument values
-          params = Enum.zip(param_names, arguments)
-
           # Copy current state to fun state
           fun_state = Map.merge(state, fun_state)
 
           # Add arguments to state of the inner function
+          params = Enum.zip(param_names, arguments)
           fun_state = Enum.reduce(params, fun_state, fn {{:var, param_name}, value}, state ->
             Map.put(state, param_name, value)
           end)
@@ -151,4 +142,7 @@ defmodule Calc.Interpreter do
   defp compare(:>, left, right), do: left > right
   defp compare(:<=, left, right), do: left <= right
   defp compare(:>=, left, right), do: left >= right
+
+  defp operate(:+, left, right), do: left + right
+  defp operate(:-, left, right), do: left - right
 end
