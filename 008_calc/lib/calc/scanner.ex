@@ -8,12 +8,14 @@ defmodule Calc.Scanner do
     {"-", :-},
     {"*", :*},
     {"/", :/},
+    {"^", :^},
+
+    {"==", {:compare_operator, :==}},
+    {"<", {:compare_operator, :<}},
+
     {"(", :lparen},
     {")", :rparen},
-    {"^", :^},
-    {"==", :==},
     {"=", :=},
-    {"<", :<},
     {";", :end},
     {"?", :ternary_true},
     {":", :ternary_false},

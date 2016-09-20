@@ -65,17 +65,10 @@ defmodule Calc.Interpreter do
          end
   end
 
-  defp eval({:==, left, right}, state) do
+  defp eval({{:compare_operator, operator}, left, right}, state) do
     with {:ok, left, state} <- eval(left, state),
          {:ok, right, state} <- eval(right, state) do
-           {:ok, (if left == right, do: 1, else: 0), state}
-         end
-  end
-
-  defp eval({:<, left, right}, state) do
-    with {:ok, left, state} <- eval(left, state),
-         {:ok, right, state} <- eval(right, state) do
-           {:ok, (if left < right, do: 1, else: 0), state}
+           {:ok, (if compare(operator, left, right), do: 1, else: 0), state}
          end
   end
 
@@ -152,4 +145,7 @@ defmodule Calc.Interpreter do
   defp built_in(:sin, [value]), do: :math.sin(value)
   defp built_in(:sqrt, [value]), do: :math.sqrt(value)
   defp built_in(:unshift, [list, value]), do: [value | list]
+
+  defp compare(:==, left, right), do: left == right
+  defp compare(:<, left, right), do: left < right
 end

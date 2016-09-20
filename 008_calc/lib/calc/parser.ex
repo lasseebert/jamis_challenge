@@ -7,9 +7,10 @@ defmodule Calc.Parser do
                    | ()
   ternary = comparison
           | comparison : '?' ternary : ternary
+
   comparison = expression
-             | expression == expression
-             | expression < expression
+             | expression compare-operator expression
+
   expression = term expr-op
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
@@ -96,18 +97,13 @@ defmodule Calc.Parser do
   end
 
   # comparison = expression
-  #            | expression == expression
-  #            | expression < expression
+  #            | expression compare-operator expression
   def parse_comparison(tokens) do
     with {:ok, expression, rest} <- parse_expression(tokens) do
       case rest do
-        [:== | rest] ->
+        [{:compare_operator, _} = compare_operator | rest] ->
           with {:ok, expression_2, rest} <- parse_expression(rest) do
-            {:ok, {:==, expression, expression_2}, rest}
-          end
-        [:< | rest] ->
-          with {:ok, expression_2, rest} <- parse_expression(rest) do
-            {:ok, {:<, expression, expression_2}, rest}
+            {:ok, {compare_operator, expression, expression_2}, rest}
           end
         rest ->
           {:ok, expression, rest}
