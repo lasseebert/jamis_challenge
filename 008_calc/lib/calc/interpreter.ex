@@ -148,4 +148,7 @@ defmodule Calc.Interpreter do
 
   defp compare(:==, left, right), do: left == right
   defp compare(:<, left, right), do: left < right
+  defp compare(:>, left, right), do: left > right
+  defp compare(:<=, left, right), do: left <= right
+  defp compare(:>=, left, right), do: left >= right
 end

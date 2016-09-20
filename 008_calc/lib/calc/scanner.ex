@@ -11,7 +11,10 @@ defmodule Calc.Scanner do
     {"^", :^},
 
     {"==", {:compare_operator, :==}},
+    {"<=", {:compare_operator, :<=}},
+    {">=", {:compare_operator, :>=}},
     {"<", {:compare_operator, :<}},
+    {">", {:compare_operator, :>}},
 
     {"(", :lparen},
     {")", :rparen},

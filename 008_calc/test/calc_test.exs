@@ -193,4 +193,17 @@ defmodule CalcTest do
     """
     assert Calc.eval(program) == 2
   end
+
+  test "comparison" do
+    assert Calc.eval("1 == 2") == 0
+    assert Calc.eval("1 == 1") == 1
+    assert Calc.eval("1 < 2") == 1
+    assert Calc.eval("2 < 1") == 0
+    assert Calc.eval("1 > 2") == 0
+    assert Calc.eval("2 > 1") == 1
+    assert Calc.eval("1 <= 2") == 1
+    assert Calc.eval("2 <= 1") == 0
+    assert Calc.eval("1 >= 2") == 0
+    assert Calc.eval("2 >= 1") == 1
+  end
 end
