@@ -5,11 +5,11 @@ defmodule Calc.Parser do
   expressions      = ternary more-expressions
   more_expressions = ';' expressions
                    | ()
-  ternary = equals
-          | equals : '?' ternary : ternary
-  equals = expression
-         | expression == expression
-         | expression < expression
+  ternary = comparison
+          | comparison : '?' ternary : ternary
+  comparison = expression
+             | expression == expression
+             | expression < expression
   expression = term expr-op
              | var '=' expression ;
              | 'fun' '(' var-list ')' '{' expressions  '}'
@@ -31,7 +31,7 @@ defmodule Calc.Parser do
          | '-' factor ;
          | var '(' argument-list ')'
          | var
-         | built_in '(' expression ')'
+         | built_in '(' argument-list ')'
          | '[]'
 
   var-list = vars
@@ -77,10 +77,10 @@ defmodule Calc.Parser do
     end
   end
 
-  # ternary = equals
-  #         | equals : '?' ternary : ternary
+  # ternary = comparison
+  #         | comparison : '?' ternary : ternary
   def parse_ternary(tokens) do
-    with {:ok, expression, rest} <- parse_equals(tokens) do
+    with {:ok, expression, rest} <- parse_comparison(tokens) do
       case rest do
         [:ternary_true | rest] ->
           with {:ok, true_expressions, [:ternary_false | rest]} <- parse_expressions(rest),
@@ -95,10 +95,10 @@ defmodule Calc.Parser do
     end
   end
 
-  # equals = expression
-  #        | expression == expression
-  #        | expression < expression
-  def parse_equals(tokens) do
+  # comparison = expression
+  #            | expression == expression
+  #            | expression < expression
+  def parse_comparison(tokens) do
     with {:ok, expression, rest} <- parse_expression(tokens) do
       case rest do
         [:== | rest] ->
