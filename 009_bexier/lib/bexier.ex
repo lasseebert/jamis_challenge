@@ -10,5 +10,6 @@ defmodule Bexier do
     a * (1 - t) * (1 - t) +
     b * 2 * (1 - t) * t +
     c * t * t
+    |> round
   end
 end
