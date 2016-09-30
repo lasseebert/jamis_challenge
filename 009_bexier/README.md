@@ -1,24 +1,17 @@
 # Bexier
 
-**TODO: Add description**
+Solution for Weekly Programming Challenge #9 by Jamis Buck.
 
-## Installation
+See: http://weblog.jamisbuck.org/2016/9/24/weekly-programming-challenge-9.html
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+Can render a simple quadratic beizer curve using the PPM renderer from week 4
 
-  1. Add `bexier` to your list of dependencies in `mix.exs`:
+Usage:
 
-    ```elixir
-    def deps do
-      [{:bexier, "~> 0.1.0"}]
-    end
-    ```
+```elixir
+Bexier.Renderer.render({{50, 250}, {100, -150}, {450, 250}}, {500, 300}, "example.ppm")
+```
 
-  2. Ensure `bexier` is started before your application:
+Will render this image:
 
-    ```elixir
-    def application do
-      [applications: [:bexier]]
-    end
-    ```
-
+![Example image](https://raw.githubusercontent.com/lasseebert/jamis_challenge/master/009_bexier/example.png)
