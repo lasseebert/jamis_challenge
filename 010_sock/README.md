@@ -6,6 +6,9 @@ See: http://weblog.jamisbuck.org/2016/10/1/weekly-programming-challenge-10.html
 
 ## Normal mode solution
 
+[See server code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/client/lib/sock/server/simple.ex)
+[See client code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/client/lib/sock/client/simple.ex)
+
 The server starts on a configured port (1234) and interprets the query as
 [Calc](https://github.com/lasseebert/jamis_challenge/tree/master/008_calc) syntax.
 
@@ -19,6 +22,8 @@ Sock.Client.Simple.request("fact = fun(n) { n == 1 ? 1 : fact(n - 1) * n }; fact
 ```
 
 ## HTTP client
+
+[See client code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/client/lib/sock/client/http.ex)
 
 The client is compatible with the most basic parts of HTTP/1.1.
 
