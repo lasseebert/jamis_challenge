@@ -37,6 +37,6 @@ response.status
 response.headers |> Map.get("Content-Type")
 # => "text/html;charset=utf-8"
 
-response.body |> String.slice(0, 121)
-# => "<!DOCTYPE html><html><head><meta content=\"text/html;charset=UTF-8\" http-equiv=\"Content-type\" /><title>Lasse Ebert</title>"
+Regex.run(~r{<title>[^<]+</title>}, response.body)
+# => ["<title>Lasse Ebert</title>"]
 ```
