@@ -28,6 +28,8 @@ defmodule Sock.Server.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:calc, path: "../../008_calc"}
+    ]
   end
 end

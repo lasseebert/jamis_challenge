@@ -8,8 +8,7 @@ defmodule Sock.Server do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Starts a worker by calling: Sock.Server.Worker.start_link(arg1, arg2, arg3)
-      # worker(Sock.Server.Worker, [arg1, arg2, arg3]),
+      worker(Sock.Server.Simple, [[port: 1234]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
