@@ -3,9 +3,10 @@ defmodule Sock.Client.SimpleTest do
   alias Sock.Client.Simple
 
   def with_server(fun) do
+    opts = [:binary, active: false, reuseaddr: true]
+    {:ok, listen_socket} = :gen_tcp.listen(1234, opts)
+
     spawn_link(fn ->
-      opts = [:binary, active: false, reuseaddr: true]
-      {:ok, listen_socket} = :gen_tcp.listen(1234, opts)
       {:ok, socket} = :gen_tcp.accept(listen_socket)
       :gen_tcp.send(socket, "ready\n")
 
@@ -18,6 +19,7 @@ defmodule Sock.Client.SimpleTest do
       :gen_tcp.close(socket)
       :gen_tcp.close(listen_socket)
     end)
+
     fun.()
   end
 
