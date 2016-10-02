@@ -1,6 +1,8 @@
 defmodule Sock.Client.HTTP do
   @moduledoc """
   A very basic HTTP client
+
+  It supports most basic features of HTTP/1.1
   """
 
   alias Sock.Client.Response
@@ -11,11 +13,17 @@ defmodule Sock.Client.HTTP do
   @request_timeout 5000
   @line_ending "\r\n"
 
+  @doc """
+  GETs the specified resource
+  """
   def get(uri) do
     {protocol, host, port, path} = uri |> parse_uri
     transmit("GET", protocol, host, port, path)
   end
 
+  @doc """
+  Parses a uri into protocol, host, port and path parts
+  """
   def parse_uri(uri) do
     groups = Regex.named_captures(@uri_pattern, uri)
     protocol = groups |> Map.get("protocol")
@@ -46,11 +54,12 @@ defmodule Sock.Client.HTTP do
     request = build_request("GET", path, headers)
     :ok = Socket.send(socket, request)
 
-    {_socket, response} =
+    {socket, response} =
       {socket, %Response{}}
       |> read_headers
       |> read_body
 
+    Socket.close(socket)
     response
   end
 
