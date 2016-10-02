@@ -18,7 +18,7 @@ Sock.Client.Simple.request("fact = fun(n) { n == 1 ? 1 : fact(n - 1) * n }; fact
 # => "120"
 ```
 
-* [See server code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/client/lib/sock/server/simple.ex)
+* [See server code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/server/lib/sock/server/simple.ex)
 * [See client code](https://github.com/lasseebert/jamis_challenge/blob/master/010_sock/client/lib/sock/client/simple.ex)
 
 
