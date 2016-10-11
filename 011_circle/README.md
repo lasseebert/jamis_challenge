@@ -9,7 +9,7 @@ Usage:
 
 ```elixir
 image =
-  Image.Raw.new(400, 400, {255, 255, 255})
+  Image.Raw.new(400, 400, {180, 180, 180})
   |> Circle.draw_circle({150, 150}, 100, {255, 0, 0})
   |> Image.PPMRenderer.to_binary
 
