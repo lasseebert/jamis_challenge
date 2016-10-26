@@ -27,6 +27,9 @@ defmodule Bridson.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:image, path: "../004_image"},
+      {:circle, path: "../011_circle"}
+    ]
   end
 end

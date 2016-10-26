@@ -5,8 +5,12 @@ defmodule Circle do
 
     draw_center_circle(start_point, error, MapSet.new)
     |> Enum.map(fn {x, y} -> {x + origin_x, y + origin_y} end)
-    |> Enum.reduce(raw, fn pixel, raw ->
-      Image.Raw.draw_pixel(raw, pixel, color)
+    |> Enum.reduce(raw, fn {x, y} = pixel, raw ->
+      if x >= 0 && x < raw.width && y >= 0 && y < raw.height do
+        Image.Raw.draw_pixel(raw, pixel, color)
+      else
+        raw
+      end
     end)
   end
 
