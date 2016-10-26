@@ -1,24 +1,6 @@
 # Bridson
 
-**TODO: Add description**
+Solution for Weekly Programming Challenge #13 by Jamis Buck.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `bridson` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:bridson, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `bridson` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:bridson]]
-    end
-    ```
-
+See:
+http://weblog.jamisbuck.org/2016/10/22/weekly-programming-challenge-13.html
