@@ -1,0 +1,2 @@
+defmodule Bridson do
+end
