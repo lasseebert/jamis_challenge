@@ -1,0 +1,2 @@
+defmodule Fract do
+end
